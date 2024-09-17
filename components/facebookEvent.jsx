@@ -1,0 +1,55 @@
+export const facebookEvent = {
+  view_content: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
+    content_type: { type: "string", placeholder: "product" },
+    contents: { type: "string", placeholder: "product" },
+    value: { type: "string" },
+    currency: { type: "string" },
+  },
+  add_to_cart: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
+    content_type: { type: "string", placeholder: "product" },
+    value: { type: "string" },
+    currency: { type: "string" },
+  },
+  add_to_wishlist: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
+    contents: { type: "string", placeholder: "product" },
+    value: { type: "string" },
+    currency: { type: "string" },
+  },
+  initiate_checkout: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
+    value: { type: "string" },
+    currency: { type: "string" },
+    num_items: { type: "string" },
+  },
+  add_payment_info: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
+    contents: { type: "string", placeholder: "product" },
+    value: { type: "string" },
+    currency: { type: "string" },
+  },
+  purchase: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
+    content_type: { type: "string", placeholder: "product" },
+    contents: { type: "string", placeholder: "product" },
+    value: { type: "string" },
+    currency: { type: "string" },
+    num_items: { type: "string" },
+  },
+  lead: {
+    value: { type: "string" },
+    currency: { type: "string" },
+  },
+  complete_registration: {
+    value: { type: "string" },
+    currency: { type: "string" },
+  },
+};

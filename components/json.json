@@ -1,0 +1,208 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2024-09-17 10:27:34",
+  "containerVersion": {
+    "path": "accounts/6247820543/containers/195268723/versions/0",
+    "accountId": "6247820543",
+    "containerId": "195268723",
+    "containerVersionId": "0",
+    "container": {
+      "path": "accounts/6247820543/containers/195268723",
+      "accountId": "6247820543",
+      "containerId": "195268723",
+      "name": "abc",
+      "publicId": "GTM-WWM5JLVM",
+      "usageContext": ["WEB"],
+      "fingerprint": "1726303316693",
+      "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6247820543/containers/195268723/workspaces?apiLink=container",
+      "features": {
+        "supportUserPermissions": true,
+        "supportEnvironments": true,
+        "supportWorkspaces": true,
+        "supportGtagConfigs": false,
+        "supportBuiltInVariables": true,
+        "supportClients": false,
+        "supportFolders": true,
+        "supportTags": true,
+        "supportTemplates": true,
+        "supportTriggers": true,
+        "supportVariables": true,
+        "supportVersions": true,
+        "supportZones": true,
+        "supportTransformations": false
+      },
+      "tagIds": ["GTM-WWM5JLVM"]
+    },
+    "variable": [
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "variableId": "18",
+        "name": "LT - Gads conversion label",
+        "type": "smm",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "true"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "input",
+            "value": "{{Event}}"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "defaultValue",
+            "value": "{{Event}} is not a conversion"
+          },
+          {
+            "type": "LIST",
+            "key": "map",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "key",
+                    "value": "select_promotion"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "adadkok"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "key",
+                    "value": "add_to_cart"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "dadada"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "key",
+                    "value": "begin_checkout"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "adadad"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1726315521165",
+        "formatValue": {}
+      },
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "variableId": "23",
+        "name": "CONSTANTE",
+        "type": "c",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "value",
+            "value": "abc"
+          }
+        ],
+        "fingerprint": "1726477204990",
+        "formatValue": {}
+      },
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "variableId": "24",
+        "name": "Copy of CONSTANTE",
+        "type": "c",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "value",
+            "value": "abc"
+          }
+        ],
+        "fingerprint": "1726477278256",
+        "formatValue": {}
+      },
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "variableId": "25",
+        "name": "DLV - ecommerce.value",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "ecommerce.value"
+          }
+        ],
+        "fingerprint": "1726563952359",
+        "formatValue": {}
+      }
+    ],
+    "builtInVariable": [
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "type": "PAGE_URL",
+        "name": "Page URL"
+      },
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "type": "PAGE_HOSTNAME",
+        "name": "Page Hostname"
+      },
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "type": "PAGE_PATH",
+        "name": "Page Path"
+      },
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "type": "REFERRER",
+        "name": "Referrer"
+      },
+      {
+        "accountId": "6247820543",
+        "containerId": "195268723",
+        "type": "EVENT",
+        "name": "Event"
+      }
+    ],
+    "fingerprint": "1726568854633",
+    "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6247820543/containers/195268723/versions/0?apiLink=version"
+  }
+}
