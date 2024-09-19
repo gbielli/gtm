@@ -39,7 +39,7 @@ export const facebookEvent = {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
     content_type: { type: "string", placeholder: "product" },
-    contents: { type: "string", placeholder: "product" },
+    quantity: { type: "string", placeholder: "product" },
     value: { type: "string" },
     currency: { type: "string" },
     num_items: { type: "string" },
