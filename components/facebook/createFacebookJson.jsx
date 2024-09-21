@@ -59,52 +59,58 @@ function createFacebookVariables(events, parameters, pixelId) {
   console.log("Paramètres reçus:", parameters);
 
   const variables = [];
+  const createdParams = new Set();
+
+  // Fonction utilitaire pour créer une variable DLV
+  const createDLVVariable = (paramKey) => {
+    return {
+      accountId: "6247820543",
+      containerId: "195268723",
+      variableId: generateUniqueId().toString(),
+      name: `DLV - ${paramKey}`,
+      type: "v",
+      parameter: [
+        {
+          type: "INTEGER",
+          key: "dataLayerVersion",
+          value: "2",
+        },
+        {
+          type: "BOOLEAN",
+          key: "setDefaultValue",
+          value: "false",
+        },
+        {
+          type: "TEMPLATE",
+          key: "name",
+          value: `${paramKey}`,
+        },
+      ],
+      fingerprint: "1726563952359",
+      formatValue: {},
+    };
+  };
 
   Object.entries(events).forEach(([eventType, isSelected]) => {
-    if (isSelected) {
+    if (isSelected && facebookEvent[eventType]) {
       console.log(`Traitement de l'événement: ${eventType}`);
-      if (facebookEvent[eventType]) {
-        Object.entries(facebookEvent[eventType]).forEach(
-          ([paramKey, paramData]) => {
-            console.log(`Création de variable pour ${eventType} - ${paramKey}`);
 
-            if (paramKey === "productListPath") {
-              const customJsListId = createFacebookContents(paramKey);
-              const customJsContentIds = createFacebookContentIds(paramKey);
-              variables.push(customJsListId, customJsContentIds);
-            }
+      Object.keys(facebookEvent[eventType]).forEach((paramKey) => {
+        if (!createdParams.has(paramKey)) {
+          console.log(`Création de variable pour ${paramKey}`);
 
-            variables.push({
-              accountId: "6247820543",
-              containerId: "195268723",
-              variableId: generateUniqueId().toString(),
-              name: `DLV - ${paramKey}`,
-              type: "v",
-              parameter: [
-                {
-                  type: "INTEGER",
-                  key: "dataLayerVersion",
-                  value: "2",
-                },
-                {
-                  type: "BOOLEAN",
-                  key: "setDefaultValue",
-                  value: "false",
-                },
-                {
-                  type: "TEMPLATE",
-                  key: "name",
-                  value: `${paramKey}`,
-                },
-              ],
-              fingerprint: "1726563952359",
-              formatValue: {},
-            });
+          if (paramKey === "productListPath") {
+            const customJsListId = createFacebookContents(paramKey);
+            const customJsContentIds = createFacebookContentIds(paramKey);
+            variables.push(customJsListId, customJsContentIds);
           }
-        );
-      } else {
-        console.warn(`Événement non trouvé dans facebookEvent: ${eventType}`);
-      }
+
+          variables.push(createDLVVariable(paramKey));
+          createdParams.add(paramKey);
+        }
+      });
+    } else if (isSelected) {
+      console.warn(`Événement non trouvé dans facebookEvent: ${eventType}`);
     }
   });
 
@@ -121,7 +127,6 @@ function createFacebookVariables(events, parameters, pixelId) {
 
   return [...variables, constVariable];
 }
-
 function createFacebookTags(events, parameters) {
   console.log("ce sont les paramètres", parameters, events);
 

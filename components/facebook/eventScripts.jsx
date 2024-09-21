@@ -103,37 +103,4 @@ export const eventScripts = {
         eventID: 'S-{{Unique Event ID}}'
       });
     `,
-  Contact: () => `
-      fbq('track', 'Contact', {}, {
-        eventID: 'C-{{Unique Event ID}}'
-      });
-    `,
-  CustomizeProduct: () => `
-      fbq('track', 'CustomizeProduct', {}, {
-        eventID: 'CP-{{Unique Event ID}}'
-      });
-    `,
-  Donate: (params) => `
-      fbq('track', 'Donate', {
-        currency: {{DLV - ${params.currency}}},
-        value: {{DLV - ${params.value}}}
-      }, {
-        eventID: 'D-{{Unique Event ID}}'
-      });
-    `,
-  FindLocation: () => `
-      fbq('track', 'FindLocation', {}, {
-        eventID: 'FL-{{Unique Event ID}}'
-      });
-    `,
-  Schedule: () => `
-      fbq('track', 'Schedule', {}, {
-        eventID: 'SCH-{{Unique Event ID}}'
-      });
-    `,
-  SubmitApplication: () => `
-      fbq('track', 'SubmitApplication', {}, {
-        eventID: 'SA-{{Unique Event ID}}'
-      });
-    `,
 };

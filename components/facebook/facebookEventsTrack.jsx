@@ -14,8 +14,11 @@ const FacebookEventTracker = () => {
     parameters: {},
   });
 
+  const [uniqueParameters, setUniqueParameters] = useState({});
+
   useEffect(() => {
     console.log("État Facebook mis à jour:", facebook);
+    updateUniqueParameters();
   }, [facebook]);
 
   const eventTypes = Object.keys(facebookEvent);
@@ -38,10 +41,6 @@ const FacebookEventTracker = () => {
       } else {
         newEvents[eventType] = true;
         newParameters[eventType] = {};
-        Object.keys(facebookEvent[eventType]).forEach((param) => {
-          newParameters[eventType][param] =
-            facebookEvent[eventType][param].placeholder || "";
-        });
       }
 
       return {
@@ -52,16 +51,25 @@ const FacebookEventTracker = () => {
     });
   };
 
-  const handleParameterChange = (eventType, parameter, value) => {
-    setFacebook((prev) => ({
+  const updateUniqueParameters = () => {
+    const newUniqueParameters = {};
+    Object.entries(facebook.events).forEach(([eventType, isSelected]) => {
+      if (isSelected) {
+        Object.keys(facebookEvent[eventType]).forEach((param) => {
+          if (!newUniqueParameters[param]) {
+            newUniqueParameters[param] =
+              facebookEvent[eventType][param].placeholder || "";
+          }
+        });
+      }
+    });
+    setUniqueParameters(newUniqueParameters);
+  };
+
+  const handleParameterChange = (parameter, value) => {
+    setUniqueParameters((prev) => ({
       ...prev,
-      parameters: {
-        ...prev.parameters,
-        [eventType]: {
-          ...prev.parameters[eventType],
-          [parameter]: value,
-        },
-      },
+      [parameter]: value,
     }));
   };
 
@@ -73,7 +81,22 @@ const FacebookEventTracker = () => {
       );
       return;
     }
-    const jsonObj = createFacebookJsonObject(facebook);
+    const jsonObj = createFacebookJsonObject({
+      ...facebook,
+      parameters: Object.fromEntries(
+        Object.entries(facebook.events).map(([eventType, isSelected]) => [
+          eventType,
+          isSelected
+            ? Object.fromEntries(
+                Object.keys(facebookEvent[eventType]).map((param) => [
+                  param,
+                  uniqueParameters[param],
+                ])
+              )
+            : {},
+        ])
+      ),
+    });
     if (jsonObj === null) {
       console.error("Échec de la génération du JSON.");
       return;
@@ -93,42 +116,23 @@ const FacebookEventTracker = () => {
   const renderParametersTable = () => (
     <div className="mt-4">
       <h4 className="font-semibold mb-2">Paramètres des événements</h4>
-      {Object.entries(facebook.events).map(
-        ([eventType, isSelected]) =>
-          isSelected && (
-            <div key={eventType} className="mb-4">
-              <h5 className="font-semibold">{eventType}</h5>
-              <div className="space-y-2">
-                {Object.entries(facebookEvent[eventType]).map(
-                  ([param, paramData]) => (
-                    <div key={param} className="flex items-center space-x-2">
-                      <Label
-                        htmlFor={`facebook-param-${eventType}-${param}`}
-                        className="w-1/3"
-                      >
-                        {param}
-                      </Label>
-                      <Input
-                        id={`facebook-param-${eventType}-${param}`}
-                        type="text"
-                        value={facebook.parameters[eventType]?.[param] || ""}
-                        onChange={(e) =>
-                          handleParameterChange(
-                            eventType,
-                            param,
-                            e.target.value
-                          )
-                        }
-                        placeholder={paramData.placeholder || `Entrez ${param}`}
-                        className="w-2/3"
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          )
-      )}
+      <div className="space-y-2">
+        {Object.entries(uniqueParameters).map(([param, value]) => (
+          <div key={param} className="flex items-center space-x-2">
+            <Label htmlFor={`facebook-param-${param}`} className="w-1/3">
+              {param}
+            </Label>
+            <Input
+              id={`facebook-param-${param}`}
+              type="text"
+              value={value}
+              onChange={(e) => handleParameterChange(param, e.target.value)}
+              placeholder={`Entrez ${param}`}
+              className="w-2/3"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 
