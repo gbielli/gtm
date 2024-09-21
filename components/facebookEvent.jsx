@@ -1,5 +1,5 @@
 export const facebookEvent = {
-  view_content: {
+  ViewContent: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
     content_type: { type: "string", placeholder: "product" },
@@ -7,35 +7,35 @@ export const facebookEvent = {
     value: { type: "string" },
     currency: { type: "string" },
   },
-  add_to_cart: {
+  AddToCart: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
     content_type: { type: "string", placeholder: "product" },
     value: { type: "string" },
     currency: { type: "string" },
   },
-  add_to_wishlist: {
+  AddToWishlist: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
     contents: { type: "string", placeholder: "product" },
     value: { type: "string" },
     currency: { type: "string" },
   },
-  initiate_checkout: {
+  InitiateCheckout: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
     value: { type: "string" },
     currency: { type: "string" },
     num_items: { type: "string" },
   },
-  add_payment_info: {
+  AddPaymentInfo: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
     contents: { type: "string", placeholder: "product" },
     value: { type: "string" },
     currency: { type: "string" },
   },
-  purchase: {
+  Purchase: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "ecommerce.items.item_id" },
     content_type: { type: "string", placeholder: "product" },
@@ -44,11 +44,11 @@ export const facebookEvent = {
     currency: { type: "string" },
     num_items: { type: "string" },
   },
-  lead: {
+  Lead: {
     value: { type: "string" },
     currency: { type: "string" },
   },
-  complete_registration: {
+  CompleteRegistration: {
     value: { type: "string" },
     currency: { type: "string" },
   },
