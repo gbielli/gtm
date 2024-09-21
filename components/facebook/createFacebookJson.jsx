@@ -1,15 +1,16 @@
 import { facebookEvent } from "../facebookEvent";
+import { eventScripts } from "./eventScripts";
 
 function generateUniqueId() {
   return Math.floor(100 + Math.random() * 900);
 }
 
-function createCustomJsListId(productListPath) {
+function createFacebookContents(productListPath) {
   return {
     accountId: "6247820543",
     containerId: "195268723",
     variableId: generateUniqueId().toString(),
-    name: `CUST JS - Product List IDs`,
+    name: `CUST JS - FB Contents`,
     type: "jsm",
     parameter: [
       {
@@ -19,6 +20,30 @@ function createCustomJsListId(productListPath) {
     var productList = {{DLV - ${productListPath}}};
     return productList.map(function(item) {
       return { id: item.id, quantity: item.quantity };
+    });
+  }`,
+      },
+    ],
+    fingerprint: "1726563952359",
+    formatValue: {},
+  };
+}
+
+function createFacebookContentIds(productListPath) {
+  return {
+    accountId: "6247820543",
+    containerId: "195268723",
+    variableId: generateUniqueId().toString(),
+    name: `CUST JS - FB Content IDs`,
+    type: "jsm",
+    parameter: [
+      {
+        type: "TEMPLATE",
+        key: "javascript",
+        value: `function() {
+    var productList = {{DLV - ${productListPath}}};
+    return productList.map(function(item) {
+      return item.id;
     });
   }`,
       },
@@ -38,16 +63,15 @@ function createFacebookVariables(events, parameters, pixelId) {
   Object.entries(events).forEach(([eventType, isSelected]) => {
     if (isSelected) {
       console.log(`Traitement de l'événement: ${eventType}`);
-
-      console.log(facebookEvent[eventType]);
       if (facebookEvent[eventType]) {
         Object.entries(facebookEvent[eventType]).forEach(
           ([paramKey, paramData]) => {
             console.log(`Création de variable pour ${eventType} - ${paramKey}`);
 
             if (paramKey === "productListPath") {
-              const customJsListId = createCustomJsListId(paramKey);
-              variables.push(customJsListId);
+              const customJsListId = createFacebookContents(paramKey);
+              const customJsContentIds = createFacebookContentIds(paramKey);
+              variables.push(customJsListId, customJsContentIds);
             }
 
             variables.push({
@@ -100,42 +124,6 @@ function createFacebookVariables(events, parameters, pixelId) {
 
 function createFacebookTags(events, parameters) {
   console.log("ce sont les paramètres", parameters, events);
-  const eventScripts = {
-    ViewContent: (params) => `
-      fbq('track', 'ViewContent', {
-        content_ids: {{CUST JS - Product List IDs}},
-        content_type: 'product',
-        contents: {{CUST JS - contents}},
-        currency: {{DLV - ${params.currency}}},
-        value: {{DLV - ${params.value}}}
-      }, {
-        eventID: 'VC-{{Unique Event ID}}'
-      });
-    `,
-    AddToCart: (params) => `
-      fbq('track', 'AddToCart', {
-        content_ids: {{CUST JS - Product List IDs}},
-        content_type: 'product',
-        contents: {{CUST JS - contents}},
-        currency: {{DLV - ${params.currency}}},
-        value: {{DLV - ${params.value}}}
-      }, {
-        eventID: 'ADD-{{Unique Event ID}}'
-      });
-    `,
-    Purchase: (params) => `
-      fbq('track', 'Purchase', {
-        content_ids: {{CUST JS - Product List IDs}},
-        contents: {{CUST JS - contents}},
-        content_type: 'product',
-         currency: {{DLV - ${params.currency}}},
-        value: {{DLV - ${params.value}}},
-        num_items: {{CUST - Purchase Num Items}}
-      }, {
-        eventID: 'P-{{Unique Event ID}}'
-      });
-    `,
-  };
 
   return Object.entries(events)
     .map(([eventType, isSelected]) => {
@@ -146,16 +134,6 @@ function createFacebookTags(events, parameters) {
 
       const script = `
 <script>
-  !function(f,b,e,v,n,t,s) {
-    if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-  
-  fbq('init', '{{CONST - Facebook ID}}');
   ${eventScript}
 </script>
 `;
