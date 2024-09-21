@@ -4,6 +4,30 @@ function generateUniqueId() {
   return Math.floor(100 + Math.random() * 900);
 }
 
+function createCustomJsListId(productListPath) {
+  return {
+    accountId: "6247820543",
+    containerId: "195268723",
+    variableId: generateUniqueId().toString(),
+    name: `CUST JS - Product List IDs`,
+    type: "jsm",
+    parameter: [
+      {
+        type: "TEMPLATE",
+        key: "javascript",
+        value: `function() {
+    var productList = {{DLV - ${productListPath}}};
+    return productList.map(function(item) {
+      return { id: item.id, quantity: item.quantity };
+    });
+  }`,
+      },
+    ],
+    fingerprint: "1726563952359",
+    formatValue: {},
+  };
+}
+
 function createFacebookVariables(events, parameters, pixelId) {
   console.log("Création des variables Facebook");
   console.log("Events reçus:", events);
@@ -14,12 +38,18 @@ function createFacebookVariables(events, parameters, pixelId) {
   Object.entries(events).forEach(([eventType, isSelected]) => {
     if (isSelected) {
       console.log(`Traitement de l'événement: ${eventType}`);
+
+      console.log(facebookEvent[eventType]);
       if (facebookEvent[eventType]) {
         Object.entries(facebookEvent[eventType]).forEach(
           ([paramKey, paramData]) => {
             console.log(`Création de variable pour ${eventType} - ${paramKey}`);
-            const variableValue =
-              parameters[eventType]?.[paramKey] || paramData.placeholder || "";
+
+            if (paramKey === "productListPath") {
+              const customJsListId = createCustomJsListId(paramKey);
+              variables.push(customJsListId);
+            }
+
             variables.push({
               accountId: "6247820543",
               containerId: "195268723",
@@ -40,7 +70,7 @@ function createFacebookVariables(events, parameters, pixelId) {
                 {
                   type: "TEMPLATE",
                   key: "name",
-                  value: variableValue,
+                  value: `${paramKey}`,
                 },
               ],
               fingerprint: "1726563952359",
@@ -69,35 +99,38 @@ function createFacebookVariables(events, parameters, pixelId) {
 }
 
 function createFacebookTags(events, parameters) {
+  console.log("ce sont les paramètres", parameters, events);
   const eventScripts = {
     ViewContent: (params) => `
       fbq('track', 'ViewContent', {
-        content_ids: ${params.idPath || "{{CUST - ViewContent IDs}}"},
-        content_type: ${params.content_type || "'product'"},
-        contents: ${params.contents || "{{CUST - ViewContent Contents}}"},
-        currency: ${params.currency || "{{DLV - ecommerce.currencyCode}}"},
-        value: ${params.value || "{{CUST - ViewContent Value}}"}
+        content_ids: {{CUST JS - Product List IDs}},
+        content_type: 'product',
+        contents: {{CUST JS - contents}},
+        currency: {{DLV - ${params.currency}}},
+        value: {{DLV - ${params.value}}}
       }, {
         eventID: 'VC-{{Unique Event ID}}'
       });
     `,
     AddToCart: (params) => `
       fbq('track', 'AddToCart', {
-        contents: "{{CUST - AddToCart Content}}"},
+        content_ids: {{CUST JS - Product List IDs}},
         content_type: 'product',
-        currency: "{{DLV - ecommerce.currencyCode}}"},
-        value:"{{CUST - AddToCart Value}}"}
+        contents: {{CUST JS - contents}},
+        currency: {{DLV - ${params.currency}}},
+        value: {{DLV - ${params.value}}}
       }, {
         eventID: 'ADD-{{Unique Event ID}}'
       });
     `,
     Purchase: (params) => `
       fbq('track', 'Purchase', {
-        contents: ${params.contents || "{{CUST - Purchase Content}}"},
+        content_ids: {{CUST JS - Product List IDs}},
+        contents: {{CUST JS - contents}},
         content_type: 'product',
-        currency: ${params.currency || "{{DLV - ecommerce.currencyCode}}"},
-        value: ${params.value || "{{CUST - Purchase Value}}"},
-        num_items: ${params.num_items || "{{CUST - Purchase Num Items}}"}
+         currency: {{DLV - ${params.currency}}},
+        value: {{DLV - ${params.value}}},
+        num_items: {{CUST - Purchase Num Items}}
       }, {
         eventID: 'P-{{Unique Event ID}}'
       });
