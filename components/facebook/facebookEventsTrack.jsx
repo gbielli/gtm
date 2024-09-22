@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import { facebookEvent } from "../facebookEvent";
 import { Checkbox } from "../ui/checkbox";
 import { createFacebookJsonObject } from "./createFacebookJson";
+import { facebookEvent } from "./facebookEvent";
 
 const FacebookEventTracker = () => {
   const [facebook, setFacebook] = useState({
@@ -148,6 +148,7 @@ const FacebookEventTracker = () => {
           onChange={(e) => handlePixelIdChange(e.target.value)}
           placeholder="Entrez l'ID du Pixel Facebook"
           className="w-full"
+          required
         />
       </div>
 

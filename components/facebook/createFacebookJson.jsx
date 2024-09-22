@@ -1,5 +1,5 @@
-import { facebookEvent } from "../facebookEvent";
 import { eventScripts } from "./eventScripts";
+import { facebookEvent } from "./facebookEvent";
 
 function generateUniqueId() {
   return Math.floor(100 + Math.random() * 900);
@@ -62,12 +62,12 @@ function createFacebookVariables(events, parameters, pixelId) {
   const createdParams = new Set();
 
   // Fonction utilitaire pour créer une variable DLV
-  const createDLVVariable = (paramKey) => {
+  const createDLVVariable = (paramValue) => {
     return {
       accountId: "6247820543",
       containerId: "195268723",
       variableId: generateUniqueId().toString(),
-      name: `DLV - ${paramKey}`,
+      name: `DLV - ${paramValue}`,
       type: "v",
       parameter: [
         {
@@ -83,7 +83,7 @@ function createFacebookVariables(events, parameters, pixelId) {
         {
           type: "TEMPLATE",
           key: "name",
-          value: `${paramKey}`,
+          value: paramValue,
         },
       ],
       fingerprint: "1726563952359",
@@ -95,20 +95,24 @@ function createFacebookVariables(events, parameters, pixelId) {
     if (isSelected && facebookEvent[eventType]) {
       console.log(`Traitement de l'événement: ${eventType}`);
 
-      Object.keys(facebookEvent[eventType]).forEach((paramKey) => {
-        if (!createdParams.has(paramKey)) {
-          console.log(`Création de variable pour ${paramKey}`);
+      Object.entries(parameters[eventType] || {}).forEach(
+        ([paramName, paramValue]) => {
+          if (!createdParams.has(paramValue)) {
+            console.log(
+              `Création de variable pour ${paramName}: ${paramValue}`
+            );
 
-          if (paramKey === "productListPath") {
-            const customJsListId = createFacebookContents(paramKey);
-            const customJsContentIds = createFacebookContentIds(paramKey);
-            variables.push(customJsListId, customJsContentIds);
+            if (paramName === "productListPath") {
+              const customJsListId = createFacebookContents(paramValue);
+              const customJsContentIds = createFacebookContentIds(paramValue);
+              variables.push(customJsListId, customJsContentIds);
+            }
+
+            variables.push(createDLVVariable(paramValue));
+            createdParams.add(paramValue);
           }
-
-          variables.push(createDLVVariable(paramKey));
-          createdParams.add(paramKey);
         }
-      });
+      );
     } else if (isSelected) {
       console.warn(`Événement non trouvé dans facebookEvent: ${eventType}`);
     }
@@ -127,6 +131,7 @@ function createFacebookVariables(events, parameters, pixelId) {
 
   return [...variables, constVariable];
 }
+
 function createFacebookTags(events, parameters) {
   console.log("ce sont les paramètres", parameters, events);
 
@@ -147,7 +152,7 @@ function createFacebookTags(events, parameters) {
         accountId: "6247820543",
         containerId: "194603635",
         tagId: generateUniqueId().toString(),
-        name: `CUST - FB - ${eventType}`,
+        name: `FB - ${eventType}`,
         type: "html",
         parameter: [
           {

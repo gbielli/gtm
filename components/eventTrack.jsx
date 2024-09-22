@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { createJsonObject } from "./createJsonObject";
-import { facebookEvent } from "./facebookEvent";
+import { facebookEvent } from "./facebook/facebookEvent";
 
 const EventTracker = () => {
   const [adPlatforms, setAdPlatforms] = useState({
