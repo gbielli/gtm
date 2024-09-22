@@ -19,7 +19,7 @@ function createFacebookContents(productListPath, idName) {
         value: `function() {
     var productList = {{DLV - ${productListPath}}};
     return productList.map(function(item) {
-      return { id: item.id, quantity: item.quantity };
+      return { id: item.${idName}, quantity: item.quantity };
     });
   }`,
       },
@@ -43,7 +43,7 @@ function createFacebookContentIds(productListPath, idName) {
         value: `function() {
     var productList = {{DLV - ${productListPath}}};
     return productList.map(function(item) {
-      return item.id;
+      return item.${idName};
     });
   }`,
       },
@@ -117,9 +117,13 @@ function createFacebookVariables(events, parameters, pixelId) {
   // Création des variables spéciales si nécessaire
   if (hasProductListPath) {
     const productListPath = parameters.productListPath;
+    const idName = parameters.idPath;
     if (productListPath) {
-      const customJsListId = createFacebookContents(productListPath);
-      const customJsContentIds = createFacebookContentIds(productListPath);
+      const customJsListId = createFacebookContents(productListPath, idName);
+      const customJsContentIds = createFacebookContentIds(
+        productListPath,
+        idName
+      );
       variables.push(customJsListId, customJsContentIds);
     }
   }
