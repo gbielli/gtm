@@ -1,36 +1,70 @@
 "use client";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { Checkbox } from "../ui/checkbox";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
+import { useCallback, useMemo, useState } from "react";
 import { createFacebookJsonObject } from "./createFacebookJson";
 import { facebookEvent } from "./facebookEvent";
 
-const FacebookEventTracker = () => {
+const ParameterInput = ({ param, value, onChange }) => (
+  <div className="flex items-center space-x-2">
+    <Label htmlFor={`facebook-param-${param}`} className="w-1/3">
+      {param}
+    </Label>
+    <Input
+      id={`facebook-param-${param}`}
+      type="text"
+      value={value || ""}
+      onChange={(e) => onChange(param, e.target.value)}
+      placeholder={`Entrez ${param}`}
+      className="w-2/3"
+    />
+  </div>
+);
+
+const SuccessAlert = ({ isVisible }) => (
+  <Alert
+    className={`fixed bottom-4 right-4 w-96 bg-green-500 text-white transition-opacity duration-300 ${
+      isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+    }`}
+  >
+    <CheckCircledIcon color="white" className="h-4 w-4" />
+    <AlertTitle>Succès</AlertTitle>
+    <AlertDescription>
+      Le fichier JSON a été généré et téléchargé avec succès.
+    </AlertDescription>
+  </Alert>
+);
+
+export default function FacebookEventTracker() {
   const [facebook, setFacebook] = useState({
     pixelId: "",
     events: {},
     parameters: {},
   });
   const [error, setError] = useState("");
+  const [isExporting, setIsExporting] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-  const eventTypes = Object.keys(facebookEvent);
+  const eventTypes = useMemo(() => Object.keys(facebookEvent), []);
 
-  const handlePixelIdChange = (value) => {
+  const handlePixelIdChange = useCallback((value) => {
     setFacebook((prev) => ({
       ...prev,
       pixelId: value,
     }));
     setError("");
-  };
+  }, []);
 
-  const handleEventCheckboxChange = (eventType) => {
+  const handleEventCheckboxChange = useCallback((eventType) => {
     setFacebook((prev) => {
       const newEvents = { ...prev.events };
       newEvents[eventType] = !newEvents[eventType];
 
-      // Mettre à jour les paramètres en fonction des événements sélectionnés
       const newParameters = { ...prev.parameters };
       if (newEvents[eventType]) {
         Object.keys(facebookEvent[eventType]).forEach((param) => {
@@ -40,7 +74,6 @@ const FacebookEventTracker = () => {
           }
         });
       } else {
-        // Optionnel : supprimer les paramètres qui ne sont plus utilisés
         Object.keys(newParameters).forEach((param) => {
           if (
             !Object.entries(newEvents).some(
@@ -54,9 +87,9 @@ const FacebookEventTracker = () => {
 
       return { ...prev, events: newEvents, parameters: newParameters };
     });
-  };
+  }, []);
 
-  const handleParameterChange = (parameter, value) => {
+  const handleParameterChange = useCallback((parameter, value) => {
     setFacebook((prev) => ({
       ...prev,
       parameters: {
@@ -64,61 +97,48 @@ const FacebookEventTracker = () => {
         [parameter]: value,
       },
     }));
-  };
+  }, []);
 
-  const handleExportJSON = () => {
+  const handleExportJSON = useCallback(async () => {
     if (!facebook.pixelId.trim()) {
       setError("L'ID du pixel Facebook est obligatoire.");
       return;
     }
 
-    console.log("État Facebook avant export:", facebook);
-    const jsonObj = createFacebookJsonObject(facebook);
-    if (jsonObj === null) {
-      console.error("Échec de la génération du JSON.");
-      return;
-    }
-    console.log("JSON généré:", jsonObj);
-    const jsonString = JSON.stringify(jsonObj, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = href;
-    link.download = "Facebook_Event_Tracking.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    setIsExporting(true);
+    try {
+      const jsonObj = createFacebookJsonObject(facebook);
+      if (jsonObj === null) {
+        throw new Error("Échec de la génération du JSON.");
+      }
 
-  const renderParametersTable = () => {
-    const relevantParameters = Object.entries(facebook.events)
+      const jsonString = JSON.stringify(jsonObj, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Facebook_Event_Tracking.json";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setShowSuccessAlert(true);
+      setTimeout(() => setShowSuccessAlert(false), 5000); // Auto-hide after 5 seconds
+    } catch (error) {
+      console.error("L'exportation a échoué:", error);
+      setError("L'exportation a échoué. Veuillez réessayer.");
+    } finally {
+      setIsExporting(false);
+    }
+  }, [facebook]);
+
+  const relevantParameters = useMemo(() => {
+    return Object.entries(facebook.events)
       .filter(([_, isSelected]) => isSelected)
       .flatMap(([eventType, _]) => Object.keys(facebookEvent[eventType]))
       .filter((value, index, self) => self.indexOf(value) === index);
-
-    return (
-      <div className="mt-4">
-        <h4 className="font-semibold mb-2">Paramètres des événements</h4>
-        <div className="space-y-2">
-          {relevantParameters.map((param) => (
-            <div key={param} className="flex items-center space-x-2">
-              <Label htmlFor={`facebook-param-${param}`} className="w-1/3">
-                {param}
-              </Label>
-              <Input
-                id={`facebook-param-${param}`}
-                type="text"
-                value={facebook.parameters[param] || ""}
-                onChange={(e) => handleParameterChange(param, e.target.value)}
-                placeholder={`Entrez ${param}`}
-                className="w-2/3"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  }, [facebook.events]);
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
@@ -153,14 +173,33 @@ const FacebookEventTracker = () => {
             </div>
           ))}
         </div>
-        {renderParametersTable()}
+        <div className="mt-4">
+          <h4 className="font-semibold mb-2">Paramètres des événements</h4>
+          <div className="space-y-2">
+            {relevantParameters.map((param) => (
+              <ParameterInput
+                key={param}
+                param={param}
+                value={facebook.parameters[param]}
+                onChange={handleParameterChange}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
-      <Button onClick={handleExportJSON} className="mt-4">
-        Exporter en JSON
+      <Button
+        onClick={handleExportJSON}
+        disabled={isExporting}
+        className="mt-4"
+      >
+        {isExporting ? "Exportation en cours..." : "Exporter en JSON"}
       </Button>
+
+      <SuccessAlert
+        isVisible={showSuccessAlert}
+        onClose={() => setShowSuccessAlert(false)}
+      />
     </div>
   );
-};
-
-export default FacebookEventTracker;
+}
