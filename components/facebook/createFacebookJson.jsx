@@ -5,7 +5,7 @@ function generateUniqueId() {
   return Math.floor(100 + Math.random() * 900);
 }
 
-function createFacebookContents(productListPath) {
+function createFacebookContents(productListPath, idName) {
   return {
     accountId: "6247820543",
     containerId: "195268723",
@@ -29,7 +29,7 @@ function createFacebookContents(productListPath) {
   };
 }
 
-function createFacebookContentIds(productListPath) {
+function createFacebookContentIds(productListPath, idName) {
   return {
     accountId: "6247820543",
     containerId: "195268723",
@@ -91,32 +91,38 @@ function createFacebookVariables(events, parameters, pixelId) {
     };
   };
 
+  let hasProductListPath = false;
+
   Object.entries(events).forEach(([eventType, isSelected]) => {
     if (isSelected && facebookEvent[eventType]) {
       console.log(`Traitement de l'événement: ${eventType}`);
 
-      Object.entries(parameters[eventType] || {}).forEach(
-        ([paramName, paramValue]) => {
-          if (!createdParams.has(paramValue)) {
-            console.log(
-              `Création de variable pour ${paramName}: ${paramValue}`
-            );
+      Object.entries(parameters).forEach(([paramName, paramValue]) => {
+        if (!createdParams.has(paramValue)) {
+          console.log(`Création de variable pour ${paramName}: ${paramValue}`);
 
-            if (paramName === "productListPath") {
-              const customJsListId = createFacebookContents(paramValue);
-              const customJsContentIds = createFacebookContentIds(paramValue);
-              variables.push(customJsListId, customJsContentIds);
-            }
-
-            variables.push(createDLVVariable(paramValue));
-            createdParams.add(paramValue);
+          if (paramName === "productListPath") {
+            hasProductListPath = true;
           }
+
+          variables.push(createDLVVariable(paramValue));
+          createdParams.add(paramValue);
         }
-      );
+      });
     } else if (isSelected) {
       console.warn(`Événement non trouvé dans facebookEvent: ${eventType}`);
     }
   });
+
+  // Création des variables spéciales si nécessaire
+  if (hasProductListPath) {
+    const productListPath = parameters.productListPath;
+    if (productListPath) {
+      const customJsListId = createFacebookContents(productListPath);
+      const customJsContentIds = createFacebookContentIds(productListPath);
+      variables.push(customJsListId, customJsContentIds);
+    }
+  }
 
   console.log(`Nombre de variables DLV créées: ${variables.length}`);
 

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { createFacebookJsonObject } from "./createFacebookJson";
 import { facebookEvent } from "./facebookEvent";
@@ -13,13 +13,7 @@ const FacebookEventTracker = () => {
     events: {},
     parameters: {},
   });
-
-  const [uniqueParameters, setUniqueParameters] = useState({});
-
-  useEffect(() => {
-    console.log("État Facebook mis à jour:", facebook);
-    updateUniqueParameters();
-  }, [facebook]);
+  const [error, setError] = useState("");
 
   const eventTypes = Object.keys(facebookEvent);
 
@@ -28,75 +22,58 @@ const FacebookEventTracker = () => {
       ...prev,
       pixelId: value,
     }));
+    setError("");
   };
 
   const handleEventCheckboxChange = (eventType) => {
     setFacebook((prev) => {
       const newEvents = { ...prev.events };
+      newEvents[eventType] = !newEvents[eventType];
+
+      // Mettre à jour les paramètres en fonction des événements sélectionnés
       const newParameters = { ...prev.parameters };
-
       if (newEvents[eventType]) {
-        delete newEvents[eventType];
-        delete newParameters[eventType];
-      } else {
-        newEvents[eventType] = true;
-        newParameters[eventType] = {};
-      }
-
-      return {
-        ...prev,
-        events: newEvents,
-        parameters: newParameters,
-      };
-    });
-  };
-
-  const updateUniqueParameters = () => {
-    const newUniqueParameters = {};
-    Object.entries(facebook.events).forEach(([eventType, isSelected]) => {
-      if (isSelected) {
         Object.keys(facebookEvent[eventType]).forEach((param) => {
-          if (!newUniqueParameters[param]) {
-            newUniqueParameters[param] =
+          if (!newParameters[param]) {
+            newParameters[param] =
               facebookEvent[eventType][param].placeholder || "";
           }
         });
+      } else {
+        // Optionnel : supprimer les paramètres qui ne sont plus utilisés
+        Object.keys(newParameters).forEach((param) => {
+          if (
+            !Object.entries(newEvents).some(
+              ([et, isSelected]) => isSelected && facebookEvent[et][param]
+            )
+          ) {
+            delete newParameters[param];
+          }
+        });
       }
+
+      return { ...prev, events: newEvents, parameters: newParameters };
     });
-    setUniqueParameters(newUniqueParameters);
   };
 
   const handleParameterChange = (parameter, value) => {
-    setUniqueParameters((prev) => ({
+    setFacebook((prev) => ({
       ...prev,
-      [parameter]: value,
+      parameters: {
+        ...prev.parameters,
+        [parameter]: value,
+      },
     }));
   };
 
   const handleExportJSON = () => {
-    console.log("État Facebook avant export:", facebook);
-    if (!facebook.pixelId) {
-      console.warn(
-        "L'ID du pixel Facebook n'est pas défini. Aucun JSON ne sera généré."
-      );
+    if (!facebook.pixelId.trim()) {
+      setError("L'ID du pixel Facebook est obligatoire.");
       return;
     }
-    const jsonObj = createFacebookJsonObject({
-      ...facebook,
-      parameters: Object.fromEntries(
-        Object.entries(facebook.events).map(([eventType, isSelected]) => [
-          eventType,
-          isSelected
-            ? Object.fromEntries(
-                Object.keys(facebookEvent[eventType]).map((param) => [
-                  param,
-                  uniqueParameters[param],
-                ])
-              )
-            : {},
-        ])
-      ),
-    });
+
+    console.log("État Facebook avant export:", facebook);
+    const jsonObj = createFacebookJsonObject(facebook);
     if (jsonObj === null) {
       console.error("Échec de la génération du JSON.");
       return;
@@ -113,28 +90,35 @@ const FacebookEventTracker = () => {
     document.body.removeChild(link);
   };
 
-  const renderParametersTable = () => (
-    <div className="mt-4">
-      <h4 className="font-semibold mb-2">Paramètres des événements</h4>
-      <div className="space-y-2">
-        {Object.entries(uniqueParameters).map(([param, value]) => (
-          <div key={param} className="flex items-center space-x-2">
-            <Label htmlFor={`facebook-param-${param}`} className="w-1/3">
-              {param}
-            </Label>
-            <Input
-              id={`facebook-param-${param}`}
-              type="text"
-              value={value}
-              onChange={(e) => handleParameterChange(param, e.target.value)}
-              placeholder={`Entrez ${param}`}
-              className="w-2/3"
-            />
-          </div>
-        ))}
+  const renderParametersTable = () => {
+    const relevantParameters = Object.entries(facebook.events)
+      .filter(([_, isSelected]) => isSelected)
+      .flatMap(([eventType, _]) => Object.keys(facebookEvent[eventType]))
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    return (
+      <div className="mt-4">
+        <h4 className="font-semibold mb-2">Paramètres des événements</h4>
+        <div className="space-y-2">
+          {relevantParameters.map((param) => (
+            <div key={param} className="flex items-center space-x-2">
+              <Label htmlFor={`facebook-param-${param}`} className="w-1/3">
+                {param}
+              </Label>
+              <Input
+                id={`facebook-param-${param}`}
+                type="text"
+                value={facebook.parameters[param] || ""}
+                onChange={(e) => handleParameterChange(param, e.target.value)}
+                placeholder={`Entrez ${param}`}
+                className="w-2/3"
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
@@ -147,9 +131,10 @@ const FacebookEventTracker = () => {
           value={facebook.pixelId}
           onChange={(e) => handlePixelIdChange(e.target.value)}
           placeholder="Entrez l'ID du Pixel Facebook"
-          className="w-full"
+          className={`w-full ${error ? "border-red-500" : ""}`}
           required
         />
+        {error && <p className="text-red-500">{error}</p>}
       </div>
 
       <div className="mb-8">
