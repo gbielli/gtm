@@ -5,6 +5,31 @@ function generateUniqueId() {
   return Math.floor(100 + Math.random() * 900);
 }
 
+function createFacebookNumItems(productListPath) {
+  return {
+    accountId: "6247820543",
+    containerId: "195268723",
+    variableId: generateUniqueId().toString(),
+    name: `CUST JS - FB num_items`,
+    type: "jsm",
+    parameter: [
+      {
+        type: "TEMPLATE",
+        key: "javascript",
+        value: `function () {
+  var items = {{DLV - ${productListPath}}};
+  if (items && Array.isArray(items)) {
+   return items.length;
+  }
+  return 0;
+}`,
+      },
+    ],
+    fingerprint: "1726563952359",
+    formatValue: {},
+  };
+}
+
 function createFacebookContents(productListPath, idName) {
   return {
     accountId: "6247820543",
@@ -124,7 +149,8 @@ function createFacebookVariables(events, parameters, pixelId) {
         productListPath,
         idName
       );
-      variables.push(customJsListId, customJsContentIds);
+      const customJsNumItems = createFacebookNumItems(productListPath);
+      variables.push(customJsListId, customJsContentIds, customJsNumItems);
     }
   }
 

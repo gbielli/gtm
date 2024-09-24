@@ -1,8 +1,7 @@
 export const facebookEvent = {
-  ViewContent: {
+  AddPaymentInfo: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "id" },
-    content_type: { type: "dropdown", placeholder: "product" },
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
   },
@@ -19,6 +18,12 @@ export const facebookEvent = {
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
   },
+  CompleteRegistration: {
+    value: { type: "string", placeholder: "ecommerce.value" },
+    currency: { type: "string", placeholder: "ecommerce.currency" },
+  },
+  Contact: {},
+  FindLocation: {},
   InitiateCheckout: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "id" },
@@ -26,9 +31,7 @@ export const facebookEvent = {
     currency: { type: "string", placeholder: "ecommerce.currency" },
     num_items: { type: "string" },
   },
-  AddPaymentInfo: {
-    productListPath: { type: "string", placeholder: "ecommerce.items" },
-    idPath: { type: "string", placeholder: "id" },
+  Lead: {
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
   },
@@ -41,11 +44,30 @@ export const facebookEvent = {
     currency: { type: "string", placeholder: "ecommerce.currency" },
     num_items: { type: "string" },
   },
-  Lead: {
+  Schedule: {},
+  Search: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "id" },
+    content_type: { type: "dropdown", placeholder: "product" },
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
+    search_string: { type: "string", placeholder: "ecommerce.search_string" },
   },
-  CompleteRegistration: {
+  StartTrial: {
+    currency: { type: "string", placeholder: "ecommerce.currency" },
+    predicted_ltv: { type: "string", placeholder: "ecommerce.predicted_ltv" },
+    value: { type: "string", placeholder: "ecommerce.value" },
+  },
+  SubmitApplication: {},
+  Subscribe: {
+    currency: { type: "string", placeholder: "ecommerce.currency" },
+    predicted_ltv: { type: "string", placeholder: "ecommerce.predicted_ltv" },
+    value: { type: "string", placeholder: "ecommerce.value" },
+  },
+  ViewContent: {
+    productListPath: { type: "string", placeholder: "ecommerce.items" },
+    idPath: { type: "string", placeholder: "id" },
+    content_type: { type: "dropdown", placeholder: "product" },
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
   },
