@@ -41,7 +41,7 @@ export const eventScripts = {
         content_type: 'product',
         currency: {{DLV - ${params.currency}}},
         value: {{DLV - ${params.value}}},
-        num_items: {{DLV - ${params.num_items}}}
+        num_items: {{CUST JS - FB num_items}}
       }, {
         eventID: 'P-{{Unique Event ID}}'
       });
@@ -75,7 +75,7 @@ export const eventScripts = {
         content_ids: {{CUST JS - FB Content IDs}},
         contents: {{CUST JS - FB Contents}},
         currency: {{DLV - ${params.currency}}},
-        num_items: {{DLV - ${params.num_items}}},
+        num_items: {{CUST JS - FB num_items}},
         value: {{DLV - ${params.value}}}
       }, {
         eventID: 'IC-{{Unique Event ID}}'

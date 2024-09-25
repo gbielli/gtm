@@ -1,4 +1,4 @@
-import { eventScripts } from "./eventScripts";
+import { eventScripts, FacebookPixelBase } from "./eventScripts";
 import { facebookEvent } from "./facebookEvent";
 
 function generateUniqueId() {
@@ -79,15 +79,16 @@ function createFacebookContentIds(productListPath, idName) {
 }
 
 function createFacebookVariables(events, parameters, pixelId) {
-  console.log("Création des variables Facebook");
-  console.log("Events reçus:", events);
-  console.log("Paramètres reçus:", parameters);
+  console.log("Début de createFacebookVariables");
+  console.log("Events reçus:", JSON.stringify(events));
+  console.log("Paramètres reçus:", JSON.stringify(parameters));
+  console.log("PixelId reçu:", pixelId);
 
   const variables = [];
   const createdParams = new Set();
 
-  // Fonction utilitaire pour créer une variable DLV
   const createDLVVariable = (paramValue) => {
+    console.log(`Création de DLV variable pour: ${paramValue}`);
     return {
       accountId: "6247820543",
       containerId: "195268723",
@@ -95,21 +96,9 @@ function createFacebookVariables(events, parameters, pixelId) {
       name: `DLV - ${paramValue}`,
       type: "v",
       parameter: [
-        {
-          type: "INTEGER",
-          key: "dataLayerVersion",
-          value: "2",
-        },
-        {
-          type: "BOOLEAN",
-          key: "setDefaultValue",
-          value: "false",
-        },
-        {
-          type: "TEMPLATE",
-          key: "name",
-          value: paramValue,
-        },
+        { type: "INTEGER", key: "dataLayerVersion", value: "2" },
+        { type: "BOOLEAN", key: "setDefaultValue", value: "false" },
+        { type: "TEMPLATE", key: "name", value: paramValue },
       ],
       fingerprint: "1726563952359",
       formatValue: {},
@@ -117,44 +106,46 @@ function createFacebookVariables(events, parameters, pixelId) {
   };
 
   let hasProductListPath = false;
+  let idPath = "id"; // Valeur par défaut
 
-  Object.entries(events).forEach(([eventType, isSelected]) => {
-    if (isSelected && facebookEvent[eventType]) {
-      console.log(`Traitement de l'événement: ${eventType}`);
-
-      Object.entries(parameters).forEach(([paramName, paramValue]) => {
-        if (!createdParams.has(paramValue)) {
-          console.log(`Création de variable pour ${paramName}: ${paramValue}`);
-
-          if (paramName === "productListPath") {
-            hasProductListPath = true;
+  // Traitement des événements
+  Object.entries(events).forEach(([eventType, eventData]) => {
+    if (eventData && facebookEvent[eventType]) {
+      Object.entries(facebookEvent[eventType]).forEach(
+        ([paramName, paramConfig]) => {
+          const paramValue =
+            parameters[eventType]?.[paramName] || parameters[paramName];
+          if (paramValue) {
+            if (paramName === "idPath") {
+              idPath = paramValue;
+            } else if (!createdParams.has(paramValue)) {
+              if (paramName === "productListPath") {
+                hasProductListPath = true;
+              }
+              variables.push(createDLVVariable(paramValue));
+              createdParams.add(paramValue);
+            }
           }
-
-          variables.push(createDLVVariable(paramValue));
-          createdParams.add(paramValue);
         }
-      });
-    } else if (isSelected) {
-      console.warn(`Événement non trouvé dans facebookEvent: ${eventType}`);
+      );
     }
   });
 
-  // Création des variables spéciales si nécessaire
+  // Création des variables Custom JavaScript
+  let productListPath = "ecommerce.items"; // Valeur par défaut
   if (hasProductListPath) {
-    const productListPath = parameters.productListPath;
-    const idName = parameters.idPath;
-    if (productListPath) {
-      const customJsListId = createFacebookContents(productListPath, idName);
-      const customJsContentIds = createFacebookContentIds(
-        productListPath,
-        idName
-      );
-      const customJsNumItems = createFacebookNumItems(productListPath);
-      variables.push(customJsListId, customJsContentIds, customJsNumItems);
-    }
+    productListPath =
+      parameters[
+        Object.keys(parameters).find((key) => parameters[key].productListPath)
+      ]?.productListPath || productListPath;
   }
 
-  console.log(`Nombre de variables DLV créées: ${variables.length}`);
+  console.log("Création des variables Custom JavaScript");
+  variables.push(createFacebookNumItems(productListPath));
+  variables.push(createFacebookContents(productListPath, idPath));
+  variables.push(createFacebookContentIds(productListPath, idPath));
+
+  console.log(`Nombre total de variables créées: ${variables.length}`);
 
   const constVariable = {
     accountId: "6247820543",
@@ -165,16 +156,51 @@ function createFacebookVariables(events, parameters, pixelId) {
     parameter: [{ type: "TEMPLATE", key: "value", value: pixelId }],
   };
 
-  return [...variables, constVariable];
+  variables.push(constVariable);
+
+  return variables;
 }
 
-function createFacebookTags(events, parameters) {
-  console.log("ce sont les paramètres", parameters, events);
+function createFacebookTags(events, parameters, pixelId) {
+  console.log("Paramètres et événements reçus:", parameters, events);
 
-  return Object.entries(events)
-    .map(([eventType, isSelected]) => {
-      if (!isSelected || !eventScripts[eventType]) return null;
+  const tags = [];
 
+  // Création du tag de base pour le pixel Facebook
+  const basePixelTag = {
+    accountId: "6247820543",
+    containerId: "194603635",
+    tagId: generateUniqueId().toString(),
+    name: "FB - Base Pixel",
+    type: "html",
+    parameter: [
+      {
+        type: "TEMPLATE",
+        key: "html",
+        value: FacebookPixelBase(pixelId),
+      },
+      {
+        type: "BOOLEAN",
+        key: "supportDocumentWrite",
+        value: "false",
+      },
+    ],
+    fingerprint: Date.now().toString(),
+    firingTriggerId: ["2147479553"],
+    tagFiringOption: "ONCE_PER_EVENT",
+    monitoringMetadata: {
+      type: "MAP",
+    },
+    consentSettings: {
+      consentStatus: "NOT_SET",
+    },
+  };
+
+  tags.push(basePixelTag);
+
+  // Création des tags pour chaque événement sélectionné
+  Object.entries(events).forEach(([eventType, isSelected]) => {
+    if (isSelected && eventScripts[eventType]) {
       const eventParams = parameters[eventType] || {};
       const eventScript = eventScripts[eventType](eventParams);
 
@@ -184,7 +210,7 @@ function createFacebookTags(events, parameters) {
 </script>
 `;
 
-      return {
+      const eventTag = {
         accountId: "6247820543",
         containerId: "194603635",
         tagId: generateUniqueId().toString(),
@@ -212,8 +238,12 @@ function createFacebookTags(events, parameters) {
           consentStatus: "NOT_SET",
         },
       };
-    })
-    .filter((tag) => tag !== null);
+
+      tags.push(eventTag);
+    }
+  });
+
+  return tags;
 }
 
 export function createFacebookJsonObject(facebookData) {
@@ -280,7 +310,8 @@ export function createFacebookJsonObject(facebookData) {
 
   const facebookTags = createFacebookTags(
     facebookData.events,
-    facebookData.parameters
+    facebookData.parameters,
+    facebookData.pixelId
   );
   jsonObj.containerVersion.tag.push(...facebookTags);
 

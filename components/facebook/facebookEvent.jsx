@@ -29,7 +29,6 @@ export const facebookEvent = {
     idPath: { type: "string", placeholder: "id" },
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
-    num_items: { type: "string" },
   },
   Lead: {
     value: { type: "string", placeholder: "ecommerce.value" },
@@ -42,7 +41,6 @@ export const facebookEvent = {
     quantity: { type: "string", placeholder: "product" },
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
-    num_items: { type: "string" },
   },
   Schedule: {},
   Search: {
