@@ -30,7 +30,7 @@ function createFacebookNumItems(productListPath) {
   };
 }
 
-function createFacebookContents(productListPath, idName) {
+function createFacebookContents(productListPath, idName, quantityPath) {
   return {
     accountId: "6247820543",
     containerId: "195268723",
@@ -44,7 +44,7 @@ function createFacebookContents(productListPath, idName) {
         value: `function() {
     var productList = {{DLV - ${productListPath}}};
     return productList.map(function(item) {
-      return { id: item.${idName}, quantity: item.quantity };
+      return { id: item.${idName}, quantity: item.${quantityPath}};
     });
   }`,
       },
@@ -107,6 +107,7 @@ function createFacebookVariables(events, parameters, pixelId) {
 
   let hasProductListPath = false;
   let idPath = "id"; // Valeur par défaut
+  let quantityPath = "quantity"; // Valeur par défaut
 
   // Traitement des événements
   Object.entries(events).forEach(([eventType, eventData]) => {
@@ -118,6 +119,8 @@ function createFacebookVariables(events, parameters, pixelId) {
           if (paramValue) {
             if (paramName === "idPath") {
               idPath = paramValue;
+            } else if (paramName === "quantityPath") {
+              quantityPath = paramValue;
             } else if (!createdParams.has(paramValue)) {
               if (paramName === "productListPath") {
                 hasProductListPath = true;
@@ -142,7 +145,7 @@ function createFacebookVariables(events, parameters, pixelId) {
 
   console.log("Création des variables Custom JavaScript");
   variables.push(createFacebookNumItems(productListPath));
-  variables.push(createFacebookContents(productListPath, idPath));
+  variables.push(createFacebookContents(productListPath, idPath, quantityPath));
   variables.push(createFacebookContentIds(productListPath, idPath));
 
   console.log(`Nombre total de variables créées: ${variables.length}`);
