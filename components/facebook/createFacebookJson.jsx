@@ -1,4 +1,8 @@
-import { eventScripts, FacebookPixelBase } from "./eventScripts";
+import {
+  eventScripts,
+  FacebookPixelBase,
+  scriptUniqueEventId,
+} from "./eventScripts";
 import { facebookEvent } from "./facebookEvent";
 
 function generateUniqueId() {
@@ -76,6 +80,47 @@ function createFacebookContentIds(productListPath, idName) {
     fingerprint: "1726563952359",
     formatValue: {},
   };
+}
+
+function createFacebookTriggers(events, triggers) {
+  console.log("Paramètres et événements reçus:", triggers, events);
+
+  const triggersList = [];
+
+  Object.entries(events).forEach(([eventType, isSelected]) => {
+    if (isSelected && triggers[eventType]) {
+      const trigger = {
+        accountId: "6247820543",
+        containerId: "195268723",
+        triggerId: generateUniqueId().toString(),
+        name: `CUST - ${triggers[eventType]}`,
+        type: "CUSTOM_EVENT",
+        customEventFilter: [
+          {
+            type: "EQUALS",
+            parameter: [
+              {
+                type: "TEMPLATE",
+                key: "arg0",
+                value: "{{_event}}",
+              },
+              {
+                type: "TEMPLATE",
+                key: "arg1",
+                value: triggers[eventType],
+              },
+            ],
+          },
+        ],
+        fingerprint: "1727279967299",
+      };
+
+      triggersList.push(trigger);
+      console.log("Trigger créé:", JSON.stringify(trigger));
+    }
+  });
+
+  return triggersList;
 }
 
 function createFacebookVariables(events, parameters, pixelId) {
@@ -204,7 +249,7 @@ function createFacebookTags(events, parameters, pixelId) {
   // Création des tags pour chaque événement sélectionné
   Object.entries(events).forEach(([eventType, isSelected]) => {
     if (isSelected && eventScripts[eventType]) {
-      const eventParams = parameters[eventType] || {};
+      const eventParams = parameters;
       const eventScript = eventScripts[eventType](eventParams);
 
       const script = `
@@ -232,6 +277,11 @@ function createFacebookTags(events, parameters, pixelId) {
           },
         ],
         fingerprint: Date.now().toString(),
+        setupTag: [
+          {
+            tagName: "FB - Base Pixel",
+          },
+        ],
         firingTriggerId: ["2147479553"],
         tagFiringOption: "ONCE_PER_EVENT",
         monitoringMetadata: {
@@ -295,8 +345,20 @@ export function createFacebookJsonObject(facebookData) {
         },
         tagIds: ["GTM-5BPKFTKF"],
       },
-      variable: [],
+      variable: [
+        {
+          accountId: "4701696234",
+          containerId: "11615571",
+          variableId: "179",
+          name: "Unique Event ID",
+          type: "cvt_11615571_178",
+          fingerprint: "1715852091288",
+          formatValue: {},
+        },
+      ],
       tag: [],
+      trigger: [],
+      customTemplate: [],
     },
   };
 
@@ -321,6 +383,18 @@ export function createFacebookJsonObject(facebookData) {
   console.log(
     `Nombre total de tags créés: ${jsonObj.containerVersion.tag.length}`
   );
+
+  const facebookTriggers = createFacebookTriggers(
+    facebookData.events,
+    facebookData.triggers
+  );
+  jsonObj.containerVersion.trigger.push(...facebookTriggers);
+
+  console.log(
+    `Nombre total de triggers créés: ${jsonObj.containerVersion.trigger.length}`
+  );
+
+  jsonObj.containerVersion.customTemplate.push(scriptUniqueEventId);
 
   return jsonObj;
 }

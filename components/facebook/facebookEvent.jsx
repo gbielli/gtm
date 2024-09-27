@@ -11,7 +11,7 @@ export const facebookEvent = {
     value: { type: "string", placeholder: "ecommerce.value" },
     currency: { type: "string", placeholder: "ecommerce.currency" },
   },
-  AddToWishlist: {
+  AddToWishList: {
     productListPath: { type: "string", placeholder: "ecommerce.items" },
     idPath: { type: "string", placeholder: "id" },
     value: { type: "string", placeholder: "ecommerce.value" },

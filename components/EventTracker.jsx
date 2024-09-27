@@ -148,7 +148,7 @@ const EventTracker = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Type d'événement</TableHead>
+                      <TableHead>Type d&apos;événement</TableHead>
                       <TableHead>Conversion Label</TableHead>
                     </TableRow>
                   </TableHeader>
