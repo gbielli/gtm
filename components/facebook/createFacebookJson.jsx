@@ -246,6 +246,38 @@ function createFacebookTags(events, parameters, pixelId) {
 
   tags.push(basePixelTag);
 
+  const pageViewTag = {
+    accountId: "6247820543",
+    containerId: "194603635",
+    tagId: generateUniqueId().toString(),
+    name: "FB - Page View",
+    type: "html",
+    parameter: [
+      {
+        type: "TEMPLATE",
+        key: "html",
+        value:
+          "<script>\n  fbq('track', 'PageView',{},\n     {\n      eventID: \"PV-{{Unique Event ID}}\"\n     }\n   );\n</script>",
+      },
+      {
+        type: "BOOLEAN",
+        key: "supportDocumentWrite",
+        value: "false",
+      },
+    ],
+    fingerprint: Date.now().toString(),
+    firingTriggerId: ["2147479553"],
+    tagFiringOption: "ONCE_PER_EVENT",
+    monitoringMetadata: {
+      type: "MAP",
+    },
+    consentSettings: {
+      consentStatus: "NOT_SET",
+    },
+  };
+
+  tags.push(pageViewTag);
+
   // Création des tags pour chaque événement sélectionné
   Object.entries(events).forEach(([eventType, isSelected]) => {
     if (isSelected && eventScripts[eventType]) {
