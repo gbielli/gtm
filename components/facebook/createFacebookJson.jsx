@@ -86,13 +86,15 @@ function createFacebookTriggers(events, triggers) {
   console.log("Paramètres et événements reçus:", triggers, events);
 
   const triggersList = [];
+  const triggerIdMap = {};
 
   Object.entries(events).forEach(([eventType, isSelected]) => {
     if (isSelected && triggers[eventType]) {
+      const triggerId = generateUniqueId().toString();
       const trigger = {
         accountId: "6247820543",
         containerId: "195268723",
-        triggerId: generateUniqueId().toString(),
+        triggerId: triggerId,
         name: `CUST - ${triggers[eventType]}`,
         type: "CUSTOM_EVENT",
         customEventFilter: [
@@ -116,11 +118,12 @@ function createFacebookTriggers(events, triggers) {
       };
 
       triggersList.push(trigger);
+      triggerIdMap[eventType] = triggerId;
       console.log("Trigger créé:", JSON.stringify(trigger));
     }
   });
 
-  return triggersList;
+  return { triggersList, triggerIdMap };
 }
 
 function createFacebookVariables(events, parameters, pixelId) {
@@ -209,7 +212,7 @@ function createFacebookVariables(events, parameters, pixelId) {
   return variables;
 }
 
-function createFacebookTags(events, parameters, pixelId) {
+function createFacebookTags(events, parameters, pixelId, triggerIdMap) {
   console.log("Paramètres et événements reçus:", parameters, events);
 
   const tags = [];
@@ -314,7 +317,7 @@ function createFacebookTags(events, parameters, pixelId) {
             tagName: "FB - Base Pixel",
           },
         ],
-        firingTriggerId: ["2147479553"],
+        firingTriggerId: [triggerIdMap[eventType]],
         tagFiringOption: "ONCE_PER_EVENT",
         monitoringMetadata: {
           type: "MAP",
@@ -405,25 +408,26 @@ export function createFacebookJsonObject(facebookData) {
     `Nombre total de variables créées: ${jsonObj.containerVersion.variable.length}`
   );
 
+  const { triggersList, triggerIdMap } = createFacebookTriggers(
+    facebookData.events,
+    facebookData.triggers
+  );
+  jsonObj.containerVersion.trigger.push(...triggersList);
+
+  console.log(
+    `Nombre total de triggers créés: ${jsonObj.containerVersion.trigger.length}`
+  );
+
   const facebookTags = createFacebookTags(
     facebookData.events,
     facebookData.parameters,
-    facebookData.pixelId
+    facebookData.pixelId,
+    triggerIdMap
   );
   jsonObj.containerVersion.tag.push(...facebookTags);
 
   console.log(
     `Nombre total de tags créés: ${jsonObj.containerVersion.tag.length}`
-  );
-
-  const facebookTriggers = createFacebookTriggers(
-    facebookData.events,
-    facebookData.triggers
-  );
-  jsonObj.containerVersion.trigger.push(...facebookTriggers);
-
-  console.log(
-    `Nombre total de triggers créés: ${jsonObj.containerVersion.trigger.length}`
   );
 
   jsonObj.containerVersion.customTemplate.push(scriptUniqueEventId);
