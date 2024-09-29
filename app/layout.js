@@ -1,4 +1,3 @@
-import SimpleHeader from "@/components/simple_header";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -29,7 +28,6 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${satoshi.variable} antialiased`}
       >
-        <SimpleHeader />
         {children}
       </body>
     </html>

@@ -1,9 +1,9 @@
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 
-export default function SimpleHeader() {
+export default function Header() {
   return (
-    <header className="mx-auto px-4 mb-10">
+    <header className="mx-auto px-4 mb-10 bg-white border border-b-gray-200">
       <div className="py-6">
         <Image
           src="/images/logo-boryl.svg"

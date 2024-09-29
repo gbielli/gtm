@@ -26,7 +26,7 @@ h6 {
 @layer base {
   :root {
     --gradient: #085078;
-    --background: 214 99.35% 98.5%;
+    --background: hsl(0, 0%, 98%);
     --foreground: 214 8.7% 1%;
 
     --muted: 214 8.7% 92.5%;
@@ -35,7 +35,7 @@ h6 {
     --popover: 214 20.400000000000006% 92.5%;
     --popover-foreground: 214 8.7% 1.25%;
 
-    --card: 214 20.400000000000006% 92.5%;
+    --card: 0 0 100%;
     --card-foreground: 214 8.7% 1.25%;
 
     --border: 214 13.7% 90%;
