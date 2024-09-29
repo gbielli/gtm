@@ -20,12 +20,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
+  facebookParamsList,
+  parameterDescriptions,
+} from "@/lib/facebookParamsList";
+import {
   CheckCircledIcon,
   QuestionMarkCircledIcon,
 } from "@radix-ui/react-icons";
 import { useCallback, useMemo, useState } from "react";
 import { createFacebookJsonObject } from "./createFacebookJson";
-import { facebookEvent, parameterDescriptions } from "./facebookEvent";
 
 const ParameterInput = ({ param, value, onChange, placeholder }) => {
   const description = parameterDescriptions[param];
@@ -119,7 +122,7 @@ export default function FacebookEventTracker() {
   const [isExporting, setIsExporting] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-  const eventTypes = useMemo(() => Object.keys(facebookEvent), []);
+  const eventTypes = useMemo(() => Object.keys(facebookParamsList), []);
 
   const handlePixelIdChange = useCallback((value) => {
     setFacebook((prev) => ({
@@ -141,10 +144,10 @@ export default function FacebookEventTracker() {
         // Ajouter le trigger par défaut lors de la sélection de l'événement
         newTriggers[eventType] = getDefaultTrigger(eventType);
 
-        Object.keys(facebookEvent[eventType]).forEach((param) => {
+        Object.keys(facebookParamsList[eventType]).forEach((param) => {
           if (!newParameters[param]) {
             newParameters[param] =
-              facebookEvent[eventType][param].placeholder || "";
+              facebookParamsList[eventType][param].placeholder || "";
           }
         });
       } else {
@@ -154,7 +157,7 @@ export default function FacebookEventTracker() {
         Object.keys(newParameters).forEach((param) => {
           if (
             !Object.entries(newEvents).some(
-              ([et, isSelected]) => isSelected && facebookEvent[et][param]
+              ([et, isSelected]) => isSelected && facebookParamsList[et][param]
             )
           ) {
             delete newParameters[param];
@@ -228,7 +231,7 @@ export default function FacebookEventTracker() {
   const relevantParameters = useMemo(() => {
     return Object.entries(facebook.events)
       .filter(([_, isSelected]) => isSelected)
-      .flatMap(([eventType, _]) => Object.keys(facebookEvent[eventType]))
+      .flatMap(([eventType, _]) => Object.keys(facebookParamsList[eventType]))
       .filter((value, index, self) => self.indexOf(value) === index);
   }, [facebook.events]);
 

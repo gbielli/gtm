@@ -13,6 +13,11 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+const satoshi = localFont({
+  src: "./fonts/Satoshi-Variable.woff2",
+  variable: "--font-satoshi",
+});
+
 export const metadata = {
   title: "Générateur GTM Facebook Conversions",
   description: "générateur GTM facebook conversions",
@@ -22,7 +27,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${satoshi.variable} antialiased`}
       >
         <SimpleHeader />
         {children}
