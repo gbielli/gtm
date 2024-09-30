@@ -1,11 +1,10 @@
-import Test from "./components/test";
+import FacebookGenerator from "./components/facebookGenerator";
 
 export default async function Home() {
   return (
     <div className="">
       <main>
-        {/* <FacebookEventTracker /> */}
-        <Test />
+        <FacebookGenerator />
       </main>
     </div>
   );
