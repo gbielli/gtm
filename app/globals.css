@@ -26,10 +26,10 @@ h6 {
 @layer base {
   :root {
     --gradient: #085078;
-    --background: hsl(0, 0%, 98%);
+    --background: 0 0%, 100%;
     --foreground: 214 8.7% 1%;
 
-    --muted: 214 8.7% 92.5%;
+    --muted: 214 100% 97%;
     --muted-foreground: 214 4.35% 42.5%;
 
     --popover: 214 20.400000000000006% 92.5%;

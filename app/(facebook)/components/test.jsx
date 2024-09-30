@@ -1,24 +1,10 @@
 "use client";
-import {
-  Home,
-  LineChart,
-  Menu,
-  Package,
-  Package2,
-  ShoppingCart,
-  Users,
-} from "lucide-react";
+import { LineChart, Menu } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -229,7 +215,7 @@ export default function Dashboard() {
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               <Link
                 href="#"
-                className="flex items-center gap-3 bg-muted rounded-lg px-3 py-3 text-muted-foreground transition-all hover:text-primary"
+                className="flex items-center gap-3 bg-muted rounded-lg px-3 py-3 text-primary transition-all "
               >
                 <LineChart className="h-4 w-4" />
                 Facebook
@@ -277,68 +263,53 @@ export default function Dashboard() {
                   href="#"
                   className="flex items-center gap-2 text-lg font-semibold"
                 >
-                  <Package2 className="h-6 w-6" />
-                  <span className="sr-only">Acme Inc</span>
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2  font-semibold"
+                  >
+                    <Image
+                      src={"/images/logo-boryl.svg"}
+                      alt="Company Logo"
+                      width={300}
+                      height={100}
+                      className="h-8 w-auto mx-auto"
+                    />
+                  </Link>
+                  <span className="sr-only">Boryl</span>
                 </Link>
                 <Link
                   href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground hover:text-foreground"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-3 text-foreground"
                 >
-                  <Home className="h-5 w-5" />
-                  Dashboard
+                  <LineChart className="h-5 w-5" />
+                  Facebook
                 </Link>
                 <Link
                   href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-3 text-foreground hover:text-foreground"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl  px-3 py-3 text-muted-foreground "
                 >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                  <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                    6
+                  <LineChart className="h-5 w-5" />
+                  Tiktok
+                  <Badge className="ml-auto flex h-6 shrink-0 items-center justify-center rounded-full">
+                    coming soon
                   </Badge>
                 </Link>
                 <Link
                   href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground hover:text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground hover:text-foreground"
-                >
-                  <Users className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground hover:text-foreground"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground "
                 >
                   <LineChart className="h-5 w-5" />
-                  Analytics
+                  Linkedin
+                  <Badge className="ml-auto flex h-6 shrink-0 items-center justify-center rounded-full">
+                    coming soon
+                  </Badge>
                 </Link>
               </nav>
-              <div className="mt-auto">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Upgrade to Pro</CardTitle>
-                    <CardDescription>
-                      Unlock all features and get unlimited access to our
-                      support team.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button size="sm" className="w-full">
-                      Upgrade
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
+              <div className="mt-auto"></div>
             </SheetContent>
           </Sheet>
-          <h2 className="text-2xl font-bold">
-            Création du suivi Facebook Client Side
+          <h2 className="text-xl md:text-2xl  font-bold">
+            Facebook GTM Generator
           </h2>
         </header>
 
