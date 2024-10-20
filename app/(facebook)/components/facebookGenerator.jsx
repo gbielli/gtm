@@ -12,8 +12,8 @@ import { createFacebookJsonObject } from "@/lib/createFacebookJson";
 import { facebookParamsList } from "@/lib/facebookParamsList";
 import { getDefaultTrigger } from "@/lib/utils";
 import { useCallback, useMemo, useState } from "react";
-import Header from "./header";
-import Sidebar from "./sidebar";
+import Header from "../../../components/header";
+import Sidebar from "../../../components/sidebar";
 import { TriggerTable } from "./triggerTable";
 
 const UserDataTable = ({ userData, onUserDataChange }) => {

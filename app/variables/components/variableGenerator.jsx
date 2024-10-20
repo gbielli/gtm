@@ -103,21 +103,21 @@ const GTMVariableGenerator = () => {
             placeholder="nom du paramètre [espace] ecommerce/user/global"
           />
           <div>
-            <h3>Exemple</h3>
-            <pre className="bg-gray-800 text-white p-4 rounded language-json">
+            <h3 className="mb-2">Exemple :</h3>
+            <pre className="bg-gray-800 text-sm text-white p-4 rounded language-json">
               <code className="language-json">
                 user_name user{" "}
-                <span className="text-green-500">
+                <span className="text-gray-400">
                   {"/* créer une variable user_data.user_name  */"}
                 </span>
                 <br />
                 value ecommerce{" "}
-                <span className="text-green-500">
+                <span className="text-gray-400">
                   {"/* créer une variable ecommerce.value  */"}
                 </span>
                 <br />
                 page_category{" "}
-                <span className="text-green-500">
+                <span className="text-gray-400">
                   {"/* créer une variable page_category  */"}
                 </span>
               </code>
@@ -135,7 +135,7 @@ const GTMVariableGenerator = () => {
           <Download className="mr-2 h-4 w-4" />
           {isExporting
             ? "Exportation en cours..."
-            : "Générer et Télécharger le JSON"}
+            : "Télécharger les variables"}
         </Button>
       </div>
 
@@ -153,7 +153,7 @@ const GTMVariableGenerator = () => {
         <Notification
           isVisible={showSuccessAlert}
           title="Exportation réussie"
-          description="Le fichier a été téléchargé dans votre téléphone"
+          description="Le fichier a bien été téléchargé"
           type="success"
           onClose={() => setShowSuccessAlert(false)}
         />

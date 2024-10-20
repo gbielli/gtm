@@ -1,5 +1,5 @@
-import Header from "@/app/(facebook)/components/header";
-import Sidebar from "@/app/(facebook)/components/sidebar";
+import Header from "@/components/header";
+import Sidebar from "@/components/sidebar";
 import VariableGenerator from "./components/variableGenerator";
 
 const page = () => {
