@@ -6,8 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { Notification } from "@/components/notification";
 import { ParameterInput } from "@/components/parameterInput";
-import { SuccessAlert } from "@/components/sucessAlert";
 import { createFacebookJsonObject } from "@/lib/createFacebookJson";
 import { facebookParamsList } from "@/lib/facebookParamsList";
 import { getDefaultTrigger } from "@/lib/utils";
@@ -309,8 +309,11 @@ export default function FacebookGenerator() {
               {isExporting ? "Exportation en cours..." : "Exporter en JSON"}
             </Button>
 
-            <SuccessAlert
+            <Notification
               isVisible={showSuccessAlert}
+              title="Exportation réussie"
+              description="Le fichier a été téléchargé dans votre téléphone"
+              type="success"
               onClose={() => setShowSuccessAlert(false)}
             />
           </div>

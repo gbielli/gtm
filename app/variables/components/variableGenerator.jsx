@@ -1,16 +1,23 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Notification } from "@/components/notification";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { jsonObj } from "@/lib/createVariablesJson";
-import { AlertCircle, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { useState } from "react";
 
 const GTMVariableGenerator = () => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const [isExporting, setIsExporting] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false); // new state for error alert
 
-  const downloadGTMVariables = () => {
+  const generateAndDownloadGTMVariables = async () => {
+    setIsExporting(true);
+    setError("");
+    setShowErrorAlert(false); // hide error alert on retry
     try {
       const lines = input
         .split("\n")
@@ -61,7 +68,6 @@ const GTMVariableGenerator = () => {
 
       const json = JSON.stringify(jsonObj(gtmVariables), null, 2);
 
-      // Téléchargement immédiat du fichier JSON généré
       const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -72,9 +78,13 @@ const GTMVariableGenerator = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      setError("");
+      setShowSuccessAlert(true);
+      setTimeout(() => setShowSuccessAlert(false), 5000); // Auto-hide after 5 seconds
     } catch (err) {
       setError(err.message);
+      setShowErrorAlert(true); // show error alert when there's an error
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -98,17 +108,17 @@ const GTMVariableGenerator = () => {
               <code className="language-json">
                 user_name user{" "}
                 <span className="text-green-500">
-                  {"/*création d'une variable user_data.user_name  */"}
+                  {"/* créer une variable user_data.user_name  */"}
                 </span>
                 <br />
                 value ecommerce{" "}
                 <span className="text-green-500">
-                  {"/* création d'une variable ecommerce.value  */"}
+                  {"/* créer une variable ecommerce.value  */"}
                 </span>
                 <br />
                 page_category{" "}
                 <span className="text-green-500">
-                  {"/* création d'une variable page_category  */"}
+                  {"/* créer une variable page_category  */"}
                 </span>
               </code>
             </pre>
@@ -117,20 +127,36 @@ const GTMVariableGenerator = () => {
       </Card>
 
       <div className="flex space-x-2">
-        <button
+        <Button
+          onClick={generateAndDownloadGTMVariables}
+          disabled={isExporting}
           className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 flex items-center"
-          onClick={downloadGTMVariables}
         >
           <Download className="mr-2 h-4 w-4" />
-          Télécharger le JSON
-        </button>
+          {isExporting
+            ? "Exportation en cours..."
+            : "Générer et Télécharger le JSON"}
+        </Button>
       </div>
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Erreur</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+
+      {showErrorAlert && ( // show error notification if there is an error
+        <Notification
+          title="Erreur"
+          isVisible={showErrorAlert}
+          description={error}
+          type="error"
+          onClose={() => setShowErrorAlert(false)}
+        />
+      )}
+
+      {showSuccessAlert && ( // show success notification if the export was successful
+        <Notification
+          isVisible={showSuccessAlert}
+          title="Exportation réussie"
+          description="Le fichier a été téléchargé dans votre téléphone"
+          type="success"
+          onClose={() => setShowSuccessAlert(false)}
+        />
       )}
     </div>
   );
