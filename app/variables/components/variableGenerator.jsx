@@ -8,10 +8,9 @@ import { useState } from "react";
 
 const GTMVariableGenerator = () => {
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
   const [error, setError] = useState("");
 
-  const generateGTMVariables = () => {
+  const downloadGTMVariables = () => {
     try {
       const lines = input
         .split("\n")
@@ -61,25 +60,21 @@ const GTMVariableGenerator = () => {
       });
 
       const json = JSON.stringify(jsonObj(gtmVariables), null, 2);
-      setOutput(json);
-      setError("");
-    } catch (err) {
-      setError(err.message);
-      setOutput("");
-    }
-  };
 
-  const downloadJSON = () => {
-    if (output) {
-      const blob = new Blob([output], { type: "application/json" });
+      // Téléchargement immédiat du fichier JSON généré
+      const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "gtm_container_with_variables.json";
+      a.download = "gtm_variables.json";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
+      setError("");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -103,17 +98,17 @@ const GTMVariableGenerator = () => {
               <code className="language-json">
                 user_name user{" "}
                 <span className="text-green-500">
-                  {"/* créer une variable user_data.user_name  */"}
+                  {"/*création d'une variable user_data.user_name  */"}
                 </span>
                 <br />
                 value ecommerce{" "}
                 <span className="text-green-500">
-                  {"/* créer une variable ecommerce.value  */"}
+                  {"/* création d'une variable ecommerce.value  */"}
                 </span>
                 <br />
                 page_category{" "}
                 <span className="text-green-500">
-                  {"/* créer une variable page_category  */"}
+                  {"/* création d'une variable page_category  */"}
                 </span>
               </code>
             </pre>
@@ -124,19 +119,12 @@ const GTMVariableGenerator = () => {
       <div className="flex space-x-2">
         <button
           className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 flex items-center"
-          onClick={downloadJSON}
+          onClick={downloadGTMVariables}
         >
           <Download className="mr-2 h-4 w-4" />
           Télécharger le JSON
         </button>
       </div>
-      {/* {output && (
-        <div className="container">
-          <pre className="bg-gray-100 p-4 rounded ">
-            <code>{output}</code>
-          </pre>
-        </div>
-      )} */}
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
