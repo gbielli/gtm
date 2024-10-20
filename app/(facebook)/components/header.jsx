@@ -5,7 +5,7 @@ import { LineChart, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Header() {
+export default function Header({ title }) {
   return (
     <header className="flex h-14 items-center gap-4 px-4 lg:h-[75px] lg:px-10">
       <Sheet>
@@ -38,14 +38,11 @@ export default function Header() {
               Facebook
             </Link>
             <Link
-              href="#"
+              href="/variables"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground"
             >
               <LineChart className="h-5 w-5" />
-              Tiktok
-              <Badge className="ml-auto flex h-6 shrink-0 items-center justify-center rounded-full">
-                coming soon
-              </Badge>
+              Générateur variables
             </Link>
             <Link
               href="#"
@@ -61,7 +58,7 @@ export default function Header() {
           <div className="mt-auto"></div>
         </SheetContent>
       </Sheet>
-      <h2 className="text-xl md:text-2xl font-bold">Facebook GTM Generator</h2>
+      <h2 className="text-xl md:text-2xl font-bold">{title}</h2>
     </header>
   );
 }

@@ -16,12 +16,42 @@ import Header from "./header";
 import Sidebar from "./sidebar";
 import { TriggerTable } from "./triggerTable";
 
+const UserDataTable = ({ userData, onUserDataChange }) => {
+  const userDataFields = [
+    { key: "em", label: "Email", value: "user_data.user_email" },
+    { key: "ph", label: "Phone", value: "user_data.user_phone" },
+    { key: "fn", label: "First Name", value: "user_data.user_first_name" },
+    { key: "ln", label: "Last Name", value: "user_data.user_last_name" },
+    { key: "ge", label: "Civilité", value: "user_data.user_gender" },
+    { key: "zp", label: "Zip Code", value: "user_data.user_zipcode" },
+  ];
+
+  return (
+    <div className="space-y-4">
+      {userDataFields.map(({ key, label, value }) => (
+        <div key={key} className="flex items-center space-x-4">
+          <Label htmlFor={`userData-${key}`} className="w-32">
+            {label}
+          </Label>
+          <Input
+            id={`userData-${key}`}
+            value={userData[key] || ""}
+            onChange={(e) => onUserDataChange(key, e.target.value)}
+            placeholder={value}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default function FacebookGenerator() {
   const [facebook, setFacebook] = useState({
     pixelId: "",
     events: {},
     parameters: {},
-    triggers: {}, // Nouvel état pour gérer les triggers
+    triggers: {},
+    userData: {},
   });
   const [error, setError] = useState("");
   const [isExporting, setIsExporting] = useState(false);
@@ -99,6 +129,16 @@ export default function FacebookGenerator() {
     }));
   }, []);
 
+  const handleUserDataChange = useCallback((key, value) => {
+    setFacebook((prev) => ({
+      ...prev,
+      userData: {
+        ...prev.userData,
+        [key]: value,
+      },
+    }));
+  }, []);
+
   const handleExportJSON = useCallback(async () => {
     if (!facebook.pixelId.trim()) {
       setError("L'ID du pixel Facebook est obligatoire.");
@@ -156,7 +196,7 @@ export default function FacebookGenerator() {
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar />
       <div className="flex flex-col bg-[#fafafa]">
-        <Header />
+        <Header title="Générateur de suivi Facebook" />
         <main className="flex flex-1 flex-col gap-4 px-4 lg:gap-6 lg:px-10 pb-8">
           <div className="w-full  mx-auto">
             <Card className="container mx-auto mb-8">
@@ -239,6 +279,22 @@ export default function FacebookGenerator() {
                       events={facebook.events}
                       triggers={facebook.triggers}
                       onTriggerChange={handleTriggerChange}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+
+              {hasSelectedEvents && (
+                <Card className="mb-8">
+                  <CardHeader className="px-7">
+                    <h3 className="text-xl font-semibold mb-4">
+                      Données utilisateur
+                    </h3>
+                  </CardHeader>
+                  <CardContent>
+                    <UserDataTable
+                      userData={facebook.userData}
+                      onUserDataChange={handleUserDataChange}
                     />
                   </CardContent>
                 </Card>
