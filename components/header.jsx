@@ -45,13 +45,13 @@ export default function Header({ title }) {
               Générateur variables
             </Link>
             <Link
-              href="#"
+              href="/events"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground"
             >
               <LineChart className="h-5 w-5" />
-              Linkedin
+              Générateur events
               <Badge className="ml-auto flex h-6 shrink-0 items-center justify-center rounded-full">
-                coming soon
+                new
               </Badge>
             </Link>
           </nav>

@@ -15,7 +15,7 @@ const Sidebar = () => {
       icon: LineChart,
       badge: "New",
     },
-    { href: "#", label: "Linkedin", badge: "coming soon" },
+    { href: "/events", label: "Générateur events", badge: "New" },
   ];
 
   const pathname = usePathname();
