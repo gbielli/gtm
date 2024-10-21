@@ -42,7 +42,7 @@ const GTMVariableGenerator = () => {
           accountId: "6247820543",
           containerId: "194603635",
           variableId: `${Math.floor(Math.random() * 1000)}`,
-          name: `DLV - ${key}`,
+          name: `DLV - ${nameValue}`,
           type: "v",
           parameter: [
             {
