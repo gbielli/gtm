@@ -117,10 +117,20 @@ const GTMVariableGenerator = () => {
             <h3 className="mb-2">Exemples de format accepté :</h3>
             <pre className="bg-gray-800 text-sm text-white p-4 rounded language-json">
               <code className="language-json">
-                historicalLand[Carrière / mine]{"\n"}
-                historicalLand[Site industriel]{"\n"}
-                user_name user{"\n"}
-                value ecommerce
+                user_name user{" "}
+                <span className="text-green-500">
+                  {"/* créer une variable user_data.user_name  */"}
+                </span>
+                <br />
+                value ecommerce{" "}
+                <span className="text-green-500">
+                  {"/* créer une variable ecommerce.value  */"}
+                </span>
+                <br />
+                page_category{" "}
+                <span className="text-green-500">
+                  {"/* créer une variable page_category  */"}
+                </span>
               </code>
             </pre>
           </div>

@@ -17,10 +17,10 @@ const page = async () => {
             {
               name: "OfflineConversionTest",
               params: {
-                // page_location:
-                //   "https://www.ticombo.fr/fr/discover/bc2370dc-712a-42c9-aa10-5def8f6ae7be/e1-wmP4YBYfhrun/buy",
-                // user_agent:
-                //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+                page_location:
+                  "https://www.ticombo.fr/fr/discover/bc2370dc-712a-42c9-aa10-5def8f6ae7be/e1-wmP4YBYfhrun/buy",
+                user_agent:
+                  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
                 user_data: {
                   user_mail: "william@gmail.com",
                   user_phone: "09876543210",
