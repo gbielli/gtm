@@ -100,12 +100,14 @@ const EventsGenerator = () => {
               <code className="language-json">
                 click_on_faq{" "}
                 <span className="text-gray-400">
-                  {"/* créer un trigger event custom click_on_faq  */"}
+                  {"/* création d'un trigger event custom click_on_faq  */"}
                 </span>
                 <br />
                 submit_newsletter{" "}
                 <span className="text-gray-400">
-                  {"/* créer un trigger event custom submit_newsletter  */"}
+                  {
+                    "/* création d'un trigger event custom submit_newsletter  */"
+                  }
                 </span>
                 <br />
               </code>

@@ -119,17 +119,17 @@ const GTMVariableGenerator = () => {
               <code className="language-json">
                 user_name user{" "}
                 <span className="text-gray-400">
-                  {"/* créer une variable user_data.user_name  */"}
+                  {"/* création d'une variable DLV user_data.user_name  */"}
                 </span>
                 <br />
                 value ecommerce{" "}
                 <span className="text-gray-400">
-                  {"/* créer une variable ecommerce.value  */"}
+                  {"/* création d'une variable DLV ecommerce.value  */"}
                 </span>
                 <br />
                 page_category{" "}
                 <span className="text-gray-400">
-                  {"/* créer une variable page_category  */"}
+                  {"/* création d'une variable DLV page_category  */"}
                 </span>
               </code>
             </pre>
