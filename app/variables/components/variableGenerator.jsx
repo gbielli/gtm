@@ -14,11 +14,6 @@ const GTMVariableGenerator = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-  const sanitizeVariableName = (name) => {
-    // Remplacer les caractères spéciaux par des underscores
-    return name.replace(/[\[\]\/\s]/g, "_");
-  };
-
   const generateAndDownloadGTMVariables = async () => {
     setIsExporting(true);
     setError("");
@@ -28,55 +23,38 @@ const GTMVariableGenerator = () => {
       const lines = input
         .split("\n")
         .map((line) => line.trim())
-        .filter((line) => line !== "");
+        .filter(Boolean);
 
       if (lines.length === 0) {
         throw new Error("Aucune entrée trouvée");
       }
 
-      const gtmVariables = lines.map((line) => {
-        // Récupérer la clé d'origine pour l'utiliser comme nom de variable
-        const originalKey = line.trim();
-        // Nettoyer la clé pour l'utilisation dans GTM
-        const sanitizedKey = sanitizeVariableName(originalKey);
-
-        // Par défaut, on considère que c'est une variable globale
-        let nameValue = originalKey;
-
-        // Vérifier si la ligne contient un type spécifique
-        if (line.toLowerCase().includes("user")) {
-          nameValue = `user_data.${sanitizedKey}`;
-        } else if (line.toLowerCase().includes("ecommerce")) {
-          nameValue = `ecommerce.${sanitizedKey}`;
-        }
-
-        return {
-          accountId: "6247820543",
-          containerId: "194603635",
-          variableId: `${Math.floor(Math.random() * 1000)}`,
-          name: `DLV - ${nameValue}`,
-          type: "v",
-          parameter: [
-            {
-              type: "INTEGER",
-              key: "dataLayerVersion",
-              value: "2",
-            },
-            {
-              type: "BOOLEAN",
-              key: "setDefaultValue",
-              value: "false",
-            },
-            {
-              type: "TEMPLATE",
-              key: "name",
-              value: nameValue,
-            },
-          ],
-          fingerprint: `${Date.now()}${Math.floor(Math.random() * 1000)}`,
-          formatValue: {},
-        };
-      });
+      const gtmVariables = lines.map((line) => ({
+        accountId: "6247820543",
+        containerId: "194603635",
+        variableId: `${Math.floor(Math.random() * 1000)}`,
+        name: `DLV - ${line}`,
+        type: "v",
+        parameter: [
+          {
+            type: "INTEGER",
+            key: "dataLayerVersion",
+            value: "2",
+          },
+          {
+            type: "BOOLEAN",
+            key: "setDefaultValue",
+            value: "false",
+          },
+          {
+            type: "TEMPLATE",
+            key: "name",
+            value: line,
+          },
+        ],
+        fingerprint: `${Date.now()}${Math.floor(Math.random() * 1000)}`,
+        formatValue: {},
+      }));
 
       const json = JSON.stringify(jsonObj(gtmVariables), null, 2);
       const blob = new Blob([json], { type: "application/json" });
@@ -103,7 +81,7 @@ const GTMVariableGenerator = () => {
     <div className="">
       <Card className="container mx-auto mb-8">
         <CardHeader className="px-7 text-xl">
-          <h3 className="font-semibold">Renseignez vos clés et types</h3>
+          <h3 className="font-semibold">Renseignez vos clés</h3>
         </CardHeader>
         <CardContent>
           <textarea
@@ -117,20 +95,11 @@ const GTMVariableGenerator = () => {
             <h3 className="mb-2">Exemples de format accepté :</h3>
             <pre className="bg-gray-800 text-sm text-white p-4 rounded language-json">
               <code className="language-json">
-                user_name user{" "}
-                <span className="text-gray-400">
-                  {"/* création d'une variable DLV user_data.user_name  */"}
-                </span>
+                user_data.user_name
                 <br />
-                value ecommerce{" "}
-                <span className="text-gray-400">
-                  {"/* création d'une variable DLV ecommerce.value  */"}
-                </span>
+                ecommerce.value
                 <br />
-                page_category{" "}
-                <span className="text-gray-400">
-                  {"/* création d'une variable DLV page_category  */"}
-                </span>
+                page_category
               </code>
             </pre>
           </div>

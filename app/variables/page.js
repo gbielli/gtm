@@ -9,18 +9,20 @@ const page = async () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "X-Gtm-Server-Preview":
-          //   "ZW52LTMwfGZaU2tGYUNNWVV5T19zN19jVjBlSkF8MTkyZDI3ZTNmNmIzNDI1ODRmNjYz",
+          "X-Gtm-Server-Preview":
+            "ZW52LTMwfGZaU2tGYUNNWVV5T19zN19jVjBlSkF8MTkyZDkzZjhmODBjZmQyY2ZkNzVj",
         },
         body: JSON.stringify({
           events: [
             {
-              name: "OfflineConversionTest",
+              name: "OfflineConversionTest4",
               params: {
-                page_location:
-                  "https://www.ticombo.fr/fr/discover/bc2370dc-712a-42c9-aa10-5def8f6ae7be/e1-wmP4YBYfhrun/buy",
-                user_agent:
-                  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+                // page_location:
+                //   "https://www.ticombo.fr/fr/discover/bc2370dc-712a-42c9-aa10-5def8f6ae7be/e1-wmP4YBYfhrun/buy",
+                // user_agent:
+                //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+                // ip_override: "168.212.226.204",
+                // // client_ip_address: "168.212.226.204",
                 user_data: {
                   user_mail: "william@gmail.com",
                   user_phone: "09876543210",
