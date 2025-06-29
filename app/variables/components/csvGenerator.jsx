@@ -23,7 +23,6 @@ const GTMVariableGenerator = () => {
 
       const parsedData = lines
         .map((line) => {
-          // Éviter les lignes vides
           if (line.trim() === "") return null;
 
           // Diviser la ligne à la virgule pour obtenir l'événement et les variables
