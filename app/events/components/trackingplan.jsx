@@ -128,7 +128,7 @@ const CreateEventDialog = ({ onCreateEvent }) => {
             onClick={handleCreateEvent}
             disabled={!eventData.name}
           >
-            Créer l'événement
+            Créer l événement
           </Button>
         </div>
       </DialogContent>
