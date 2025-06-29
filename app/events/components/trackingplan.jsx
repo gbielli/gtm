@@ -77,7 +77,7 @@ const CreateEventDialog = ({ onCreateEvent }) => {
               onChange={(e) =>
                 setEventData({ ...eventData, description: e.target.value })
               }
-              placeholder="Description courte de l'événement"
+              placeholder="Description courte de l événement"
             />
           </div>
 
