@@ -54,7 +54,7 @@ const EventsGenerator = () => {
               ],
             },
           ],
-          fingerprint: `${Date.now()}${Math.floor(Math.random() * 1000)}`,
+          fingerprint: `${Date.now()}${Math.floor(Math.random() * 10)}`,
         };
       });
 
