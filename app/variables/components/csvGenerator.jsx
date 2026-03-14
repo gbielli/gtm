@@ -1,10 +1,11 @@
 "use client";
 
+import { Notification } from "@/components/notification";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { jsonObj } from "@/lib/createall";
-import { Download, Upload } from "lucide-react";
+import { Download } from "lucide-react";
 import { useState } from "react";
 
 const GTMVariableGenerator = () => {
@@ -12,6 +13,7 @@ const GTMVariableGenerator = () => {
   const [error, setError] = useState("");
   const [isExporting, setIsExporting] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -25,15 +27,13 @@ const GTMVariableGenerator = () => {
         .map((line) => {
           if (line.trim() === "") return null;
 
-          // Diviser la ligne à la virgule pour obtenir l'événement et les variables
           const [eventName, variables] = line
             .split(",")
             .map((item) => item.trim());
 
-          // Retourner l'objet avec l'eventName et les variables (séparées par des espaces)
           return { eventName, variables: variables.split(" ") };
         })
-        .filter(Boolean); // Filtrer les valeurs nulles (cas où la ligne est vide)
+        .filter(Boolean);
 
       setCsvData(parsedData);
     };
@@ -44,6 +44,7 @@ const GTMVariableGenerator = () => {
   const generateAndDownloadGTMVariables = async () => {
     setIsExporting(true);
     setError("");
+    setShowErrorAlert(false);
     try {
       if (csvData.length === 0) {
         throw new Error("Aucune donnée CSV trouvée");
@@ -51,15 +52,13 @@ const GTMVariableGenerator = () => {
 
       const triggers = [];
       const vars = [];
-      const tags = [];
 
       csvData.forEach(({ eventName, variables }) => {
-        // Créer un déclencheur d'événement personnalisé
         triggers.push({
           accountId: "6247820543",
           containerId: "194603635",
-          triggerId: `${Math.floor(Math.random() * 100)}`,
-          name: `CE - ${eventName}`,
+          triggerId: `${Math.floor(Math.random() * 1000)}`,
+          name: `CUST - ${eventName}`,
           type: "CUSTOM_EVENT",
           customEventFilter: [
             {
@@ -78,15 +77,14 @@ const GTMVariableGenerator = () => {
               ],
             },
           ],
-          fingerprint: `${Date.now()}${Math.floor(Math.random() * 100)}`,
+          fingerprint: Date.now().toString(),
         });
 
-        // Créer des variables DLV pour chaque variable associée
         variables.forEach((variable) => {
           vars.push({
             accountId: "6247820543",
             containerId: "194603635",
-            variableId: `${Math.floor(Math.random() * 100)}`,
+            variableId: `${Math.floor(Math.random() * 1000)}`,
             name: `DLV - ${variable}`,
             type: "v",
             parameter: [
@@ -106,7 +104,7 @@ const GTMVariableGenerator = () => {
                 value: variable,
               },
             ],
-            fingerprint: `${Date.now()}${Math.floor(Math.random() * 100)}`,
+            fingerprint: Date.now().toString(),
             formatValue: {},
           });
         });
@@ -128,6 +126,7 @@ const GTMVariableGenerator = () => {
       setTimeout(() => setShowSuccessAlert(false), 5000);
     } catch (err) {
       setError(err.message);
+      setShowErrorAlert(true);
     } finally {
       setIsExporting(false);
     }
@@ -184,16 +183,32 @@ const GTMVariableGenerator = () => {
           disabled={isExporting || csvData.length === 0}
           className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 flex items-center"
         >
-          {isExporting ? (
-            <Upload className="mr-2 h-4 w-4" />
-          ) : (
-            <Download className="mr-2 h-4 w-4" />
-          )}
+          <Download className="mr-2 h-4 w-4" />
           {isExporting
             ? "Exportation en cours..."
             : "Générer et Télécharger le JSON"}
         </Button>
       </div>
+
+      {showErrorAlert && (
+        <Notification
+          title="Erreur"
+          isVisible={showErrorAlert}
+          description={error}
+          type="error"
+          onClose={() => setShowErrorAlert(false)}
+        />
+      )}
+
+      {showSuccessAlert && (
+        <Notification
+          isVisible={showSuccessAlert}
+          title="Exportation réussie"
+          description="Le fichier a bien été téléchargé"
+          type="success"
+          onClose={() => setShowSuccessAlert(false)}
+        />
+      )}
     </div>
   );
 };

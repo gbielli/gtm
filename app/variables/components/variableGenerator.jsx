@@ -52,9 +52,7 @@ const GTMVariableGenerator = () => {
             value: line,
           },
         ],
-        fingerprint: `${Date.now()}${Math.floor(
-          Math.random() * 1000
-        )}`.substring(0, 13),
+        fingerprint: Date.now().toString(),
         formatValue: {},
       }));
 

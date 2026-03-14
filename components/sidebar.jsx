@@ -8,30 +8,19 @@ import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const menuItems = [
-    { href: "/", label: "Facebook", badge: null },
-    {
-      href: "/variables",
-      label: "Générateur variables",
-      icon: LineChart,
-      badge: "New",
-    },
-    { href: "/events", label: "Générateur events", badge: "New" },
+    { href: "/variables", label: "Générateur variables" },
+    { href: "/events", label: "Générateur events" },
   ];
 
   const pathname = usePathname();
 
-  const isActive = (href) => {
-    if (href === "/") {
-      return pathname === href;
-    }
-    return pathname.startsWith(href);
-  };
+  const isActive = (href) => pathname.startsWith(href);
 
   return (
     <div className="hidden border-r bg-white md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-18 items-center border-b px-4 lg:h-[75px] lg:px-6 py-4">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+          <Link href="/events" className="flex items-center gap-2 font-semibold">
             <Image
               src="/images/logo-boryl.svg"
               alt="Company Logo"
@@ -55,11 +44,6 @@ const Sidebar = () => {
               >
                 <LineChart className="h-4 w-4" />
                 {item.label}
-                {item.badge && (
-                  <Badge className="ml-auto flex h-6 shrink-0 items-center justify-center rounded-full">
-                    {item.badge}
-                  </Badge>
-                )}
               </Link>
             ))}
           </nav>

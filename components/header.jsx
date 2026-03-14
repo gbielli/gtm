@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LineChart, Menu } from "lucide-react";
@@ -18,7 +17,7 @@ export default function Header({ title }) {
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
             <Link
-              href="/"
+              href="/events"
               className="flex items-center gap-2 text-lg font-semibold"
             >
               <Image
@@ -29,13 +28,6 @@ export default function Header({ title }) {
                 className="h-8 w-auto mx-auto"
               />
               <span className="sr-only">Boryl</span>
-            </Link>
-            <Link
-              href="#"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-3 text-foreground"
-            >
-              <LineChart className="h-5 w-5" />
-              Facebook
             </Link>
             <Link
               href="/variables"
@@ -50,9 +42,6 @@ export default function Header({ title }) {
             >
               <LineChart className="h-5 w-5" />
               Générateur events
-              <Badge className="ml-auto flex h-6 shrink-0 items-center justify-center rounded-full">
-                new
-              </Badge>
             </Link>
           </nav>
           <div className="mt-auto"></div>

@@ -33,7 +33,7 @@ const EventsGenerator = () => {
 
         return {
           accountId: "6247820543",
-          containerId: "195268723",
+          containerId: "194603635",
           triggerId: `${Math.floor(Math.random() * 1000)}`,
           name: `CUST - ${key}`,
           type: "CUSTOM_EVENT",
@@ -54,7 +54,7 @@ const EventsGenerator = () => {
               ],
             },
           ],
-          fingerprint: `${Date.now()}${Math.floor(Math.random() * 10)}`,
+          fingerprint: Date.now().toString(),
         };
       });
 
