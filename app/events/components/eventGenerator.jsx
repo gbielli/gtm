@@ -84,7 +84,7 @@ const EventsGenerator = () => {
     <div className="">
       <Card className="container mx-auto mb-8">
         <CardHeader className="px-7 text-xl">
-          <h3 className="font-semibold">Renseignez vos events custom</h3>
+          <h3 className="font-semibold">Renseignez vos évènements dataLayer</h3>
         </CardHeader>
         <CardContent>
           <textarea

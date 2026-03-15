@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const menuItems = [
+    { href: "/ga4", label: "Générateur GA4" },
     { href: "/variables", label: "Générateur variables" },
     { href: "/events", label: "Générateur events" },
   ];

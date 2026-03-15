@@ -27,7 +27,14 @@ export default function Header({ title }) {
                 height={100}
                 className="h-8 w-auto mx-auto"
               />
-              <span className="sr-only">Boryl</span>
+              <span className="sr-only">gtmGen</span>
+            </Link>
+            <Link
+              href="/ga4"
+              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-3 text-muted-foreground"
+            >
+              <LineChart className="h-5 w-5" />
+              Générateur GA4
             </Link>
             <Link
               href="/variables"
