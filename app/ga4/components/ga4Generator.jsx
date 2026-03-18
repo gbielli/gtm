@@ -285,36 +285,22 @@ const GA4Generator = () => {
           <h3 className="font-semibold">Configuration</h3>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <Label>Préfixe des tags</Label>
-                <Input
-                  value={tagPrefix}
-                  onChange={(e) => setTagPrefix(e.target.value)}
-                  placeholder="ex: GA4 - "
-                />
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <Label>Préfixe des tags</Label>
+              <Input
+                value={tagPrefix}
+                onChange={(e) => setTagPrefix(e.target.value)}
+                placeholder="ex: GA4 - "
+              />
             </div>
-          </div>
-          <div>
-            <div className="grid grid-cols-2 gap-4">
-              {/* <div className="space-y-1">
-                <Label>Préfixe du déclencheur</Label>
-                <Input
-                  value={triggerPrefix}
-                  onChange={(e) => setTriggerPrefix(e.target.value)}
-                  placeholder="ex: custom_"
-                />
-              </div> */}
-              <div className="space-y-1">
-                <Label>Suffixe de l&apos;évènement dataLayer</Label>
-                <Input
-                  value={triggerSuffix}
-                  onChange={(e) => setTriggerSuffix(e.target.value)}
-                  placeholder="ex: _aw"
-                />
-              </div>
+            <div className="space-y-1">
+              <Label>Suffixe de l&apos;évènement dataLayer</Label>
+              <Input
+                value={triggerSuffix}
+                onChange={(e) => setTriggerSuffix(e.target.value)}
+                placeholder="ex: _aw"
+              />
             </div>
           </div>
 
