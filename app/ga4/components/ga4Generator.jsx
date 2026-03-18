@@ -308,7 +308,7 @@ const GA4Generator = () => {
                 />
               </div> */}
               <div className="space-y-1">
-                <Label>Suffixe de l'évènement dataLayer</Label>
+                <Label>Suffixe de l&apos;évènement dataLayer</Label>
                 <Input
                   value={triggerSuffix}
                   onChange={(e) => setTriggerSuffix(e.target.value)}
@@ -321,7 +321,7 @@ const GA4Generator = () => {
           {/* Aperçu */}
           <div className="bg-gray-900 text-white p-4 rounded font-mono text-sm space-y-1">
             <p className="text-gray-400 mb-2">
-              // Aperçu pour &quot;{previewEvent}&quot;
+              {`// Aperçu pour "${previewEvent}"`}
             </p>
             <p>
               <span className="text-blue-400">Tag :</span>{" "}
