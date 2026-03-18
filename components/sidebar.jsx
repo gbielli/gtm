@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { LineChart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +10,7 @@ const Sidebar = () => {
     { href: "/ga4", label: "Générateur GA4" },
     { href: "/variables", label: "Générateur variables" },
     { href: "/events", label: "Générateur events" },
+    { href: "/tracking-plan", label: "Tracking Plan" },
   ];
 
   const pathname = usePathname();
@@ -18,9 +18,9 @@ const Sidebar = () => {
   const isActive = (href) => pathname.startsWith(href);
 
   return (
-    <div className="hidden border-r bg-white md:block">
+    <div className="hidden border-r border-sidebar-border bg-sidebar md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
-        <div className="flex h-18 items-center border-b px-4 lg:h-[75px] lg:px-6 py-4">
+        <div className="flex h-18 items-center border-b border-sidebar-border px-4 lg:h-[75px] lg:px-6 py-4">
           <Link href="/events" className="flex items-center gap-2 font-semibold">
             <Image
               src="/images/logo-boryl.svg"
@@ -39,8 +39,8 @@ const Sidebar = () => {
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-3 transition-all ${
                   isActive(item.href)
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
+                    ? "bg-sidebar-accent text-sidebar-primary"
+                    : "text-sidebar-foreground hover:text-sidebar-primary hover:bg-sidebar-accent"
                 }`}
               >
                 <LineChart className="h-4 w-4" />
